@@ -16,6 +16,8 @@ Dir["#{Padrino.root}/spec/support/**/*.rb"].each {|f| require f}
 RSpec.configure do |config|
   config.include Rack::Test::Methods
 
+  config.include ApiAuthHelper, :type => :controller
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
