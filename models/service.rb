@@ -16,10 +16,13 @@ class Service
   index({ server_client_id: 1}, {unique: true})
   index({ mobile_client_id: 1}, {unique: true})
 
+  has_many :users
+
   # You can create a composite key in mongoid to replace the default id using the key macro:
   # key :field <, :another_field, :one_more ....>
 
   def self.securerandom_string(n = 23)
     SecureRandom.urlsafe_base64(n, true)
   end
+
 end
