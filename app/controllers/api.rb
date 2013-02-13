@@ -1,13 +1,13 @@
 require "api_auth"
 
-PushToDeviceServer.controllers :api do
+PushToDeviceServer.controllers :services do
   include ApiAuth
 
   before do
     api_authenticate
   end
 
-  get :base, :map => "/", :provides => :json do
+  get :me, :map => "/services/me", :provides => :json do
     content_type :json
     @service = api_current_user
     @service.to_json
