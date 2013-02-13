@@ -1,0 +1,20 @@
+development:
+  sessions:
+    default:
+      database: push_to_device_dev
+      hosts:
+        - localhost:27017
+
+test:
+  sessions:
+    default:
+      database: push_to_device_test
+      hosts:
+        - localhost:27017
+
+production:
+  sessions:
+    default:
+      database: push_to_device_prod
+      hosts:
+        - localhost:27017
