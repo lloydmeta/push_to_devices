@@ -6,7 +6,7 @@ describe "ServicesController", :type => :controller do
     @service = FactoryGirl.create(:service)
   end
 
-  describe "get /" do
+  describe "get /services/me" do
 
     context "with server credentials" do
 
