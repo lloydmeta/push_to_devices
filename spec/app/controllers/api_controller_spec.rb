@@ -26,6 +26,25 @@ describe "ApiController", :type => :controller do
 
     end
 
+    context "with invalid" do
+
+      it "client_id should not be successful" do
+        get '/', params={}, rack_env=credentials_to_headers(server_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+        last_response.should_not be_successful
+      end
+
+      it "client_signature should not be successful" do
+        get '/', params={}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, "hahah lala"))
+        last_response.should_not be_successful
+      end
+
+      it "timestamp should not be successful" do
+        get '/', params={}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret).merge(:timestamp => 10.days.ago))
+        last_response.should_not be_successful
+      end
+
+    end
+
   end
 
 end
