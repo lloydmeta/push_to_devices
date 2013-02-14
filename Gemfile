@@ -9,6 +9,7 @@ gem 'rake'
 gem 'sinatra-flash', :require => 'sinatra/flash'
 
 # Component requirements
+gem 'bcrypt-ruby', :require => "bcrypt"
 gem 'haml'
 gem 'mongoid', :git => "git://github.com/mongoid/mongoid.git", :branch => "master"
 gem 'bson_ext', :require => "mongo"
@@ -16,7 +17,7 @@ gem 'mongo', :require => 'mongo'
 
 # Redis
 gem "redis"
-gem "resque"
+gem "resque", :require => 'resque/server'
 
 # Test requirements
 gem 'rspec', :group => "test"

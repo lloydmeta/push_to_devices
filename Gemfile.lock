@@ -18,6 +18,7 @@ GEM
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
+    bcrypt-ruby (3.0.1)
     bson (1.8.2)
     bson_ext (1.8.2)
       bson (~> 1.8.2)
@@ -114,6 +115,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt-ruby
   bson_ext
   database_cleaner
   factory_girl

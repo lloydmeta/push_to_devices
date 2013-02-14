@@ -5,3 +5,4 @@
 :script: none
 :renderer: haml
 :stylesheet: none
+:admin_renderer: haml

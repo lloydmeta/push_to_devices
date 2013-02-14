@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class ApnDeviceToken < DeviceToken
 
   # field <name>, :type => <type>, :default => <value>
