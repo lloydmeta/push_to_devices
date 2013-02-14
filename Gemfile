@@ -15,9 +15,10 @@ gem 'mongoid', :git => "git://github.com/mongoid/mongoid.git", :branch => "maste
 gem 'bson_ext', :require => "mongo"
 gem 'mongo', :require => 'mongo'
 
-# Redis
+# Redis, Resque, Resque-scheduler
 gem "redis"
 gem "resque", :require => 'resque/server'
+gem 'resque-scheduler', :require => 'resque_scheduler'
 
 # Test requirements
 gem 'rspec', :group => "test"
