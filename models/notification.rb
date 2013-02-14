@@ -8,6 +8,7 @@ class Notification
   field :android_specific_fields, :type => String
 
   validate :fields_all_json
+  validates :message, :presence => true
 
   embedded_in :user
 

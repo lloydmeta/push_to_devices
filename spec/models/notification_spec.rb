@@ -20,7 +20,18 @@ describe "Notification Model" do
   context "validations" do
 
     describe "message" do
+
       let(:user){FactoryGirl.create(:user)}
+
+      it "should not be valid if it is not present" do
+        notification = user.notifications.build
+        notification.should_not be_valid
+      end
+
+      it "should not be valid if it is empty" do
+        notification = user.notifications.build(message: "")
+        notification.should_not be_valid
+      end
 
       it "should be valid if it is a valid JSON string" do
         message = {value: 3}.to_json
@@ -30,7 +41,6 @@ describe "Notification Model" do
 
       it "should not be valid if it is not a valid JSON string" do
         broken_message = {value: 3}.to_json.chop
-        puts broken_message
         notification = user.notifications.build(message: broken_message)
         notification.should_not be_valid
       end
