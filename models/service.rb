@@ -9,6 +9,8 @@ class Service
   field :name, :type => String # name of the service registerd to this push server
   field :description, :type => String
   field :interval, :type => Integer #interval at which to run notifications
+  field :gcm_host, :type => String #interval at which to run notifications
+  field :gcm_api_key, :type => String #interval at which to run notifications
   field :server_client_id, :type => String, default: ->{Service.securerandom_string}
   field :server_client_secret, :type => String, default: ->{Service.securerandom_string}
   field :mobile_client_id, :type => String, default: ->{Service.securerandom_string}
@@ -47,12 +49,16 @@ class Service
 
   def apn_connection
     #stub
-    @apn_connection ||= Object.new
+    @apn_connection ||= begin
+      Object.new
+    end
   end
 
   def gcm_connection
     #stub
-    @gcm_connection ||= Object.new
+    @gcm_connection ||= begin
+      Object.new
+    end
   end
 
 end

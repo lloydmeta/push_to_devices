@@ -27,4 +27,18 @@ describe "Service Model" do
 
   end
 
+  describe "#send_notifications_to_users" do
+
+    it "should call #notifications with (:ios) on a NotificationsGenerator instance" do
+      NotificationsGenerator.any_instance.should_receive(:notifications).with(:ios)
+      service.send_notifications_to_users
+    end
+
+    it "should call #notifications with (:android) on a NotificationsGenerator instance" do
+      NotificationsGenerator.any_instance.should_receive(:notifications).with(:android)
+      service.send_notifications_to_users
+    end
+
+  end
+
 end
