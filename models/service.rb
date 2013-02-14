@@ -36,12 +36,12 @@ class Service
         android_notifications = notifications_generator.notifications(:android)
 
         begin
-        # apn_connection.send(ios_notificatoins)
+        # apn_connection.send(ios_notifications)
         # gcm_connection.send(android_notifications)
         rescue
           true
         ensure
-          # destroy notifications for users_batch
+          notifications_generator.clear_users_notifications!
         end
     end
   end

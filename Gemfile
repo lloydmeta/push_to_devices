@@ -25,11 +25,16 @@ gem 'pushmeup'
 
 
 # Test requirements
-gem 'rspec', :group => "test"
-gem 'rack-test', :require => "rack/test", :group => "test"
-gem 'factory_girl', :group => 'test'
-gem 'database_cleaner', :group => 'test'
-gem 'faker', :group => 'test'
+group "test" do
+  gem 'rspec'
+  gem 'rack-test', :require => "rack/test"
+  gem 'factory_girl'
+  gem 'database_cleaner'
+  gem 'faker'
+  gem 'webrat'
+  gem 'webmock'
+end
+
 
 # Padrino Stable Gem
 gem 'padrino', '0.10.7'
