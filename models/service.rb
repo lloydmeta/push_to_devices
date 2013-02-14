@@ -27,10 +27,32 @@ class Service
     SecureRandom.urlsafe_base64(n, true)
   end
 
-  def queue_notifications_for_users
-    users.all.each do |user|
-      user.async_send_notifications
+  def send_notifications_to_users
+    per_batch = 1000
+    0.step(users.count, per_batch) do |offset|
+        users_batch = users.limit(per_batch).skip(offset)
+        # ios_notifications NotificationsGenerator.new(users: users_batch, type: :ios)
+        # android_notifications NotificationsGenerator(users: users_batch, type: :android)
+
+        begin
+        # apn_connection.send(ios_notificatoins)
+        # gcm_connection.send(android_notifications)
+        rescue
+          true
+        ensure
+          # destroy notifications for users_batch
+        end
     end
+  end
+
+  def apn_connection
+    #stub
+    @apn_connection ||= Object.new
+  end
+
+  def gcm_connection
+    #stub
+    @gcm_connection ||= Object.new
   end
 
 end

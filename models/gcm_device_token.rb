@@ -15,4 +15,5 @@ class GcmDeviceToken < DeviceToken
   def device_id
     gcm_registration_id
   end
+
 end

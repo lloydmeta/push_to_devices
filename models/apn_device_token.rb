@@ -16,4 +16,5 @@ class ApnDeviceToken < DeviceToken
   def device_id
     apn_device_token
   end
+
 end

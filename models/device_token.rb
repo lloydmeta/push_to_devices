@@ -14,6 +14,6 @@ class DeviceToken
   # key :field <, :another_field, :one_more ....>
 
   def device_id
-
   end
+
 end

@@ -19,6 +19,22 @@ class Notification
   # You can create a composite key in mongoid to replace the default id using the key macro:
   # key :field <, :another_field, :one_more ....>
 
+  def ios_version
+    if ios_specific_fields && ! ios_specific_fields.empty?
+      JSON.parse(message).merge(JSON.parse(ios_specific_fields))
+    else
+      JSON.parse(message)
+    end
+  end
+
+  def android_version
+    if android_specific_fields && ! android_specific_fields.empty?
+      JSON.parse(message).merge(JSON.parse(android_specific_fields))
+    else
+      JSON.parse(message)
+    end
+  end
+
   private
     def fields_all_json
       [message, ios_specific_fields, android_specific_fields].each do |field|
