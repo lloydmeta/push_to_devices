@@ -20,6 +20,10 @@ gem "redis"
 gem "resque", :require => 'resque/server'
 gem 'resque-scheduler', :require => 'resque_scheduler'
 
+# Gem for pushing notifications to Apple and Google
+gem 'pushmeup'
+
+
 # Test requirements
 gem 'rspec', :group => "test"
 gem 'rack-test', :require => "rack/test", :group => "test"
