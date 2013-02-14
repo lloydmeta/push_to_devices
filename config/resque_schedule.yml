@@ -1,0 +1,37 @@
+1_minute_interval_notification_send:
+  every: 1m
+  class: ServiceNotificationsEnqueue
+  args: 1
+  description: Runs the 1 minute enqueue for services
+
+five_minute_interval_notification_send:
+  every: 5m
+  class: ServiceNotificationsEnqueue
+  args: 5
+  description: Runs the 5 minute enqueue for services
+
+ten_minute_interval_notification_send:
+  every: 10m
+  class: ServiceNotificationsEnqueue
+  args: 10
+  description: Runs the 10 minute enqueue for services
+
+fifteen_minute_interval_notification_send:
+  every: 15m
+  class: ServiceNotificationsEnqueue
+  args: 15
+  description: Runs the 15 minute enqueue for services
+
+thirty_minute_interval_notification_send:
+  every: 30m
+  class: ServiceNotificationsEnqueue
+  args: 30
+  description: Runs the 30 minute enqueue for services
+
+hourly_interval_notification_send:
+  every: 1h
+  class: ServiceNotificationsEnqueue
+  args: 60
+  description: Runs the 60 minute enqueue for services
+
+
