@@ -1,5 +1,6 @@
 PADRINO_ENV = 'test' unless defined?(PADRINO_ENV)
 require File.expand_path(File.dirname(__FILE__) + "/../config/boot")
+require 'webmock/rspec'
 
 FactoryGirl.definition_file_paths = [
     File.join(Padrino.root, 'factories'),
@@ -25,6 +26,10 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.start
+
+    WebMock.reset!
+    WebMock.disable_net_connect!
+    stub_request(:any, /.*/).to_return(:body => {status: "ok"}.to_json)
   end
 
   config.after(:each) do

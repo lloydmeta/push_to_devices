@@ -34,7 +34,6 @@ class Service
         notifications_generator = NotificationsGenerator.new(users: users_batch)
         ios_notifications = notifications_generator.notifications(:ios)
         android_notifications = notifications_generator.notifications(:android)
-
         begin
         # apn_connection.send(ios_notifications)
         # gcm_connection.send(android_notifications)
