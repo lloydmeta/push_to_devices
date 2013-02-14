@@ -1,0 +1,15 @@
+.block
+  .secondary-navigation
+    %ul.wat-cf
+      %li.first=link_to pat(:list), url(:services, :index)
+      %li=link_to pat(:new), url(:services, :new)
+      %li.active=link_to pat(:edit), url(:services, :edit, :id => @service.id)
+  .content
+    %h2.title
+      =pat(:edit)
+      =mt(:service)
+    .inner
+      -form_for :service, url(:services, :update, :id => @service.id), :method => :put, :class => :form do |f|
+        =partial "services/form", :locals => { :f => f }
+
+-content_for :sidebar, partial("base/sidebar")

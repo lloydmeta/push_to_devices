@@ -1,0 +1,55 @@
+.block
+  .secondary-navigation
+    %ul.wat-cf
+      %li.first.active=link_to pat(:list), url(:services, :index)
+      %li=link_to pat(:new), url(:services, :new)
+  .content
+    %h2.title
+      =pat(:all)
+      =mt(:services)
+    .inner
+      %table.table
+        %tr
+          %th.first=mat(:service, :_id)
+          %th=mat(:service, :created_at)
+          %th=mat(:service, :updated_at)
+          %th=mat(:service, :name)
+          %th=mat(:service, :description)
+          %th=mat(:service, :interval)
+          %th=mat(:service, :apn_host)
+          %th=mat(:service, :apn_port)
+          %th=mat(:service, :apn_pem_path)
+          %th=mat(:service, :apn_pem_password)
+          %th=mat(:service, :gcm_host)
+          %th=mat(:service, :gcm_api_key)
+          %th=mat(:service, :server_client_id)
+          %th=mat(:service, :server_client_secret)
+          %th=mat(:service, :mobile_client_id)
+          %th=mat(:service, :mobile_client_secret)
+          %th.last="&nbsp;"
+        -@services.each do |service|
+          %tr
+            %td.first=service._id
+            %td=service.created_at
+            %td=service.updated_at
+            %td=service.name
+            %td=service.description
+            %td=service.interval
+            %td=service.apn_host
+            %td=service.apn_port
+            %td=service.apn_pem_path
+            %td=service.apn_pem_password
+            %td=service.gcm_host
+            %td=service.gcm_api_key
+            %td=service.server_client_id
+            %td=service.server_client_secret
+            %td=service.mobile_client_id
+            %td=service.mobile_client_secret
+            %td.last
+              =button_to pat(:edit), url(:services, :edit, :id => service.id), :method => :get, :class => :button_to
+              ="|"
+              =button_to pat(:delete), url(:services, :destroy, :id => service.id), :method => :delete, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
+      .actions-bar.wat-cf
+        .actions="&nbsp;"
+
+-content_for :sidebar, partial("base/sidebar")

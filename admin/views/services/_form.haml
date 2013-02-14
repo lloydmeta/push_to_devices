@@ -1,0 +1,82 @@
+.group
+  =f.label :name
+  =f.error_message_on :name
+  =f.text_field :name, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :description
+  =f.error_message_on :description
+  =f.text_field :description, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :interval
+  =f.error_message_on :interval
+  =f.select :role, :options => [["1 minute", 1], ["5 minutes", 5], ["10 minutes", 10], ["15 mintes", 15], ["30 minutes", 30], ["1 hour", 60]]
+  %span.description Ex: Select an interval
+
+.group
+  =f.label :apn_host
+  =f.error_message_on :apn_host
+  =f.text_field :apn_host, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :apn_port
+  =f.error_message_on :apn_port
+  =f.text_field :apn_port, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :apn_pem_path
+  =f.error_message_on :apn_pem_path
+  =f.text_field :apn_pem_path, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :apn_pem_password
+  =f.error_message_on :apn_pem_password
+  =f.text_field :apn_pem_password, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :gcm_host
+  =f.error_message_on :gcm_host
+  =f.text_field :gcm_host, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :gcm_api_key
+  =f.error_message_on :gcm_api_key
+  =f.text_field :gcm_api_key, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :server_client_id
+  =f.error_message_on :server_client_id
+  =f.text_field :server_client_id, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :server_client_secret
+  =f.error_message_on :server_client_secret
+  =f.text_field :server_client_secret, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :mobile_client_id
+  =f.error_message_on :mobile_client_id
+  =f.text_field :mobile_client_id, :class => :text_field
+  %span.description Ex: a simple text
+
+.group
+  =f.label :mobile_client_secret
+  =f.error_message_on :mobile_client_secret
+  =f.text_field :mobile_client_secret, :class => :text_field
+  %span.description Ex: a simple text
+
+
+.group.navform.wat-cf
+  =f.submit pat(:save), :class => :button
+  =f.submit pat(:cancel), :onclick => "window.location='#{url(:services, :index)}';return false", :class => :button
