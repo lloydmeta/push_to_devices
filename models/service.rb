@@ -9,6 +9,10 @@ class Service
   field :name, :type => String # name of the service registerd to this push server
   field :description, :type => String
   field :interval, :type => Integer #interval at which to run notifications
+  field :apn_host, :type => String
+  field :apn_port, :type => Integer
+  field :apn_pem_path, :type => String
+  field :apn_pem_password, :type => String
   field :gcm_host, :type => String #interval at which to run notifications
   field :gcm_api_key, :type => String #interval at which to run notifications
   field :server_client_id, :type => String, default: ->{Service.securerandom_string}
@@ -37,8 +41,8 @@ class Service
         ios_notifications = notifications_generator.notifications(:ios)
         android_notifications = notifications_generator.notifications(:android)
         begin
-        # apn_connection.send(ios_notifications)
-        # gcm_connection.send(android_notifications)
+          send_apn_notifications(ios_notifications)
+          send_gcm_notifications(android_notifications)
         rescue
           true
         ensure
@@ -48,17 +52,32 @@ class Service
   end
 
   def apn_connection
-    #stub
     @apn_connection ||= begin
-      Object.new
+      connection = APNS.dup
+      connection.host = apn_host if apn_host && !apn_host.empty?
+      connection.port = apn_port if apn_port
+      connection.pem = apn_pem_path
+      connection.pass = apn_pem_password if apn_pem_password && !apn_pem_password.empty?
+      connection
     end
   end
 
   def gcm_connection
     #stub
     @gcm_connection ||= begin
-      Object.new
+      connection = GCM.dup
+      connection.host = gcm_host if gcm_host && !gcm_host.empty?
+      connection.key = gcm_api_key
+      connection
     end
+  end
+
+  def send_apn_notifications(notifications)
+    apn_connection.send(notifications)
+  end
+
+  def send_gcm_notifications(notifications)
+    gcm_connection.send(notifications)
   end
 
 end

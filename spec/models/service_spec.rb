@@ -29,13 +29,14 @@ describe "Service Model" do
 
   describe "#send_notifications_to_users" do
 
-    it "should call #notifications with (:ios) on a NotificationsGenerator instance" do
+    it "should call #notifications with (:ios) and (:android) on a NotificationsGenerator instance" do
       NotificationsGenerator.any_instance.should_receive(:notifications).with(:ios)
+      NotificationsGenerator.any_instance.should_receive(:notifications).with(:android)
       service.send_notifications_to_users
     end
 
-    it "should call #notifications with (:android) on a NotificationsGenerator instance" do
-      NotificationsGenerator.any_instance.should_receive(:notifications).with(:android)
+    it "should call #clear_users_notifications! " do
+      NotificationsGenerator.any_instance.should_receive(:clear_users_notifications!)
       service.send_notifications_to_users
     end
 
