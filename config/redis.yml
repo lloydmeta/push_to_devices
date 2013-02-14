@@ -1,0 +1,18 @@
+development: &dev
+  host: localhost
+  db: 2
+  port: 6379
+
+test: &test
+  host: localhost
+  db: 3
+  port: 6379
+
+production: &prod
+  host: 10.0.11.176
+  db: 2
+  port: 6379
+
+staging:
+  <<: *prod
+  host: 10.0.21.50

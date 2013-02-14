@@ -14,6 +14,9 @@ gem 'mongoid', :git => "git://github.com/mongoid/mongoid.git", :branch => "maste
 gem 'bson_ext', :require => "mongo"
 gem 'mongo', :require => 'mongo'
 
+# Redis
+gem "redis"
+
 # Test requirements
 gem 'rspec', :group => "test"
 gem 'rack-test', :require => "rack/test", :group => "test"
