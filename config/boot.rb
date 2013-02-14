@@ -7,6 +7,7 @@ require 'rubygems' unless defined?(Gem)
 require 'bundler/setup'
 Bundler.require(:default, PADRINO_ENV)
 
+# order matters here
 require Padrino.root("config", "redis.rb")
 require Padrino.root("config", "resque.rb")
 
