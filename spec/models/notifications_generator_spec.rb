@@ -170,4 +170,16 @@ describe "NotificationsGenerator" do
 
   end
 
+  describe "#clear_users_notifications!" do
+
+    it "should clear all the notifications for each user in @users" do
+      notifications_generator = NotificationsGenerator.new(users: apn_and_gcm_users)
+      notifications_generator.clear_users_notifications!
+      apn_and_gcm_users.each do |u|
+        u.notifications.should be_empty
+      end
+    end
+
+  end
+
 end

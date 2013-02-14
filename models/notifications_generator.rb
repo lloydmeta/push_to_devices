@@ -62,4 +62,10 @@ class NotificationsGenerator
     end
   end
 
+  def clear_users_notifications!
+    @users.each do |user|
+      user.notifications.destroy_all
+    end
+  end
+
 end

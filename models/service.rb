@@ -31,9 +31,9 @@ class Service
     per_batch = 1000
     0.step(users.count, per_batch) do |offset|
         users_batch = users.limit(per_batch).skip(offset)
-        #notifications_generator = NotificationsGenerator.new(users: users_batch)
-        # ios_notifications = notifications_generator.notifications(:ios)
-        # android_notifications = notifications_generator.notifications(:android)
+        notifications_generator = NotificationsGenerator.new(users: users_batch)
+        ios_notifications = notifications_generator.notifications(:ios)
+        android_notifications = notifications_generator.notifications(:android)
 
         begin
         # apn_connection.send(ios_notificatoins)
