@@ -47,7 +47,7 @@ class NotificationsGenerator
   def android_notifications_for_users
     @users.map {|user|
       android_notifications_for_user(user)
-    }.compact
+    }.flatten.compact
   end
 
   def android_notifications_for_user(user)

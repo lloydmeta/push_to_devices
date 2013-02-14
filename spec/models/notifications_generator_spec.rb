@@ -115,7 +115,7 @@ describe "NotificationsGenerator" do
         end
 
         it "should return an array with APN::notifications" do
-          @notifications_generator.notifications(:ios).each do |e|
+          @notifications_generator.notifications(:android).each do |e|
             e.should be_a(GCM::Notification)
           end
         end
@@ -132,5 +132,54 @@ describe "NotificationsGenerator" do
 
     end
 
+    context "APN and GCM users" do
+
+      before(:each) do
+        @notifications_generator = NotificationsGenerator.new(users: apn_and_gcm_users)
+      end
+
+      context "type set to android" do
+
+        it "should not fail" do
+          expect{
+            @notifications_generator.notifications(:android)
+          }.to_not raise_error
+        end
+
+        it "should return an array" do
+          @notifications_generator.notifications(:android).should be_a(Array)
+        end
+
+        it "should return an array with APN::notifications" do
+          @notifications_generator.notifications(:android).each do |e|
+            e.should be_a(GCM::Notification)
+          end
+        end
+
+      end
+
+      context "type set to ios" do
+
+        it "should not fail" do
+          expect{
+            @notifications_generator.notifications(:ios)
+          }.to_not raise_error
+        end
+
+        it "should return an array" do
+          @notifications_generator.notifications(:ios).should be_a(Array)
+        end
+
+        it "should return an array with APN::notifications" do
+          @notifications_generator.notifications(:ios).each do |e|
+            e.should be_a(APNS::Notification)
+          end
+        end
+
+      end
+
+    end
+
   end
+
 end
