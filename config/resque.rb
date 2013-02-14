@@ -1,0 +1,1 @@
+Resque.redis = Redis::Namespace.new(:push_noti_resque, :redis => $redis)

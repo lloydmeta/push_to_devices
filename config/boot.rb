@@ -8,6 +8,7 @@ require 'bundler/setup'
 Bundler.require(:default, PADRINO_ENV)
 
 require Padrino.root("config", "redis.rb")
+require Padrino.root("config", "resque.rb")
 
 ##
 # ## Enable devel logging

@@ -16,6 +16,7 @@ gem 'mongo', :require => 'mongo'
 
 # Redis
 gem "redis"
+gem "resque"
 
 # Test requirements
 gem 'rspec', :group => "test"
