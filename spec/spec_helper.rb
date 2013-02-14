@@ -20,13 +20,13 @@ RSpec.configure do |config|
   config.include ApiAuthHelper, :type => :controller
 
   config.before(:suite) do
+    WebMock.enable!
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
   end
 
   config.before(:each) do
     DatabaseCleaner.start
-
     WebMock.reset!
     WebMock.disable_net_connect!
     stub_request(:any, /.*/).to_return(:body => {status: "ok"}.to_json)

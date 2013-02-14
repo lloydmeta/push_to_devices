@@ -42,4 +42,26 @@ describe "Service Model" do
 
   end
 
+  # Commented out for now because I keep getting SSL errors..
+  # Need to figure out how to disable or fix it
+  # context "sending notifications" do
+
+  #   before(:each) do
+  #     @service = FactoryGirl.create(:service)
+  #   end
+
+  #   describe "#send_apn_notifications" do
+
+  #     it "should make requests to a specific address" do
+  #       notifications = 10.times.map do
+  #         APNS::Notification.new("1234", {test: "lol"})
+  #       end
+
+  #       @service.send_apn_notifications(notifications)
+  #       a_request(:any, "fake_apn.com").should have_been_made
+  #     end
+  #   end
+
+  # end
+
 end

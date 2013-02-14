@@ -53,7 +53,7 @@ class Service
 
   def apn_connection
     @apn_connection ||= begin
-      connection = APNS.dup
+      connection = APNS.clone
       connection.host = apn_host if apn_host && !apn_host.empty?
       connection.port = apn_port if apn_port
       connection.pem = apn_pem_path
@@ -65,7 +65,7 @@ class Service
   def gcm_connection
     #stub
     @gcm_connection ||= begin
-      connection = GCM.dup
+      connection = GCM.clone
       connection.host = gcm_host if gcm_host && !gcm_host.empty?
       connection.key = gcm_api_key
       connection
@@ -73,11 +73,11 @@ class Service
   end
 
   def send_apn_notifications(notifications)
-    apn_connection.send(notifications)
+    apn_connection.send_notifications(notifications) unless notifications.empty?
   end
 
   def send_gcm_notifications(notifications)
-    gcm_connection.send(notifications)
+    gcm_connection.send_notifications(notifications) unless notifications.empty?
   end
 
 end
