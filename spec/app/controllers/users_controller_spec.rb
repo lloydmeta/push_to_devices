@@ -19,27 +19,27 @@ describe "UsersController", :type => :controller do
 
         it "should create a user" do
           expect{
-            post '/users', params={"unique_hash" => "hahahlalala1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           }.to change(User, :count).by(1)
         end
 
         it "should return the current created user" do
-          post '/users', params={"unique_hash" => "hahahlalala1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           JSON.parse(last_response.body)["unique_hash"].should eq("hahahlalala1234")
         end
 
         it "should not create 2 users for when using the same @service and same unique_hash" do
-          post '/users', params={"unique_hash" => "hahahlalala1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           expect{
-            post '/users', params={"unique_hash" => "hahahlalala1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           }.to_not change(User, :count)
         end
 
         it "should create 2 users when using different services despite the same unique_hash" do
           another_service = FactoryGirl.create(:service)
           expect{
-            post '/users', params={"unique_hash" => "hahahlalala1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
-            post '/users', params={"unique_hash" => "hahahlalala1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(another_service.mobile_client_id, another_service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(another_service.mobile_client_id, another_service.mobile_client_secret))
           }.to change(User, :count).by(2)
         end
 
@@ -53,17 +53,17 @@ describe "UsersController", :type => :controller do
 
         it "should create a new user" do
           expect{
-            post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           }.to change(User, :count).by(1)
         end
 
         it "should create a new apn_device_token on the user" do
-          post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           User.find_by(unique_hash: "hahahlalala1234").apn_device_tokens.count.should eq(1)
         end
 
         it "should create a new apn_device_token_on this user that contains the same apn_device_token" do
-          post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           User.find_by(unique_hash: "hahahlalala1234").apn_device_tokens.first.device_id.should eq("asdf1234")
         end
 
@@ -78,12 +78,12 @@ describe "UsersController", :type => :controller do
 
         it "should not create a new user" do
           expect{
-            post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           }.to_not change(User, :count)
         end
 
         it "should create a new apn_device_token on the user" do
-          post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           User.find_by(unique_hash: "hahahlalala1234").apn_device_tokens.count.should eq(2)
         end
 
@@ -98,12 +98,12 @@ describe "UsersController", :type => :controller do
 
         it "should not create a new user" do
           expect{
-            post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           }.to_not change(User, :count)
         end
 
         it "should not create a new apn_device_token on the user" do
-          post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234", "apn_device_token" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           User.find_by(unique_hash: "hahahlalala1234").apn_device_tokens.count.should eq(1)
         end
 
@@ -117,18 +117,18 @@ describe "UsersController", :type => :controller do
 
         it "should create a new user" do
           expect{
-            post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           }.to change(User, :count).by(1)
         end
 
         it "should create a new gcm_device_token on the user" do
-          post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           User.find_by(unique_hash: "hahahlalala1234").gcm_device_tokens.count.should eq(1)
         end
 
 
         it "should create a new gcm_device_token this user that contains the same apn_device_token" do
-          post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           User.find_by(unique_hash: "hahahlalala1234").gcm_device_tokens.first.device_id.should eq("asdf1234")
         end
 
@@ -143,12 +143,12 @@ describe "UsersController", :type => :controller do
 
         it "should not create a new user" do
           expect{
-            post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           }.to_not change(User, :count)
         end
 
         it "should create a new gcm_device_token on the user" do
-          post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           User.find_by(unique_hash: "hahahlalala1234").gcm_device_tokens.count.should eq(2)
         end
 
@@ -163,15 +163,137 @@ describe "UsersController", :type => :controller do
 
         it "should not create a new user" do
           expect{
-            post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+            post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           }.to_not change(User, :count)
         end
 
         it "should not create a new gcm_device_token on the user" do
-          post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
+          post '/users', params={"unique_hash" => "hahahlalala1234", "gcm_registration_id" => "asdf1234"}.to_json, rack_env=credentials_to_headers(mobile_api_auth_params(@service.mobile_client_id, @service.mobile_client_secret))
           User.find_by(unique_hash: "hahahlalala1234").gcm_device_tokens.count.should eq(1)
         end
 
+      end
+
+    end
+
+  end #end POST users
+
+  context "POST users/:unique_hash/notifications" do
+
+    before(:each) do
+      @service_user_unique_hash = "asdf1234"
+      @service_user = @service.users.create!(unique_hash: @service_user_unique_hash)
+    end
+
+    let(:param_message){{value: 3}.to_json}
+    let(:param_ios_specific_fields){{badge: 5}.to_json}
+    let(:param_android_specific_fields){{google_is_the_best: true}.to_json}
+
+    context "unique_hash is invalid" do
+
+      it "should be successful" do
+        post "/users/1234asdf/notifications", params={"message" => param_message}.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        last_response.should be_successful
+      end
+
+      it "should have an error message in the response" do
+        post "/users/1234asdf/notifications", params={"message" => param_message}.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        JSON.parse(last_response.body)["error"].should_not be_nil
+      end
+
+    end
+
+    context 'params["message"] only' do
+
+      it "should create a new notification for the user" do
+        @service_user.notifications.count.should eq(0)
+        post "/users/#{@service_user_unique_hash}/notifications", params={"message" => param_message}.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
+        @service_user.notifications.count.should eq(1)
+      end
+
+      it "should create a notification on the user with a messsage" do
+        post "/users/#{@service_user_unique_hash}/notifications", params={"message" => param_message}.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
+        @service_user.notifications.first.message.should_not be_nil
+      end
+
+    end
+
+
+    context 'params["message"] with params["ios_specific_fields"]' do
+
+      let(:combined_params){
+        {
+          "message" => param_message,
+          "ios_specific_fields" => param_ios_specific_fields
+        }
+      }
+
+      it "should create a new notification for the user" do
+        @service_user.notifications.count.should eq(0)
+        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
+        @service_user.notifications.count.should eq(1)
+      end
+
+      it "should create a notification on the user with a messsage and ios_specific_fields" do
+        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
+        @service_user.notifications.first.message.should_not be_nil
+        @service_user.notifications.first.ios_specific_fields.should_not be_nil
+      end
+
+    end
+
+    context 'params["message"] with params["android_specific_fields"]' do
+
+      let(:combined_params){
+        {
+          "message" => param_message,
+          "android_specific_fields" => param_android_specific_fields
+        }
+      }
+
+      it "should create a new notification for the user" do
+        @service_user.notifications.count.should eq(0)
+        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
+        @service_user.notifications.count.should eq(1)
+      end
+
+      it "should create a notification on the user with a messsage and android_specific_fields" do
+        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
+        @service_user.notifications.first.message.should_not be_nil
+        @service_user.notifications.first.android_specific_fields.should_not be_nil
+      end
+
+    end
+
+    context 'params["message"] with params["ios_specific_fields"] and params["android_specific_fields] ' do
+
+      let(:combined_params){
+        {
+          "message" => param_message,
+          "android_specific_fields" => param_android_specific_fields,
+          "ios_specific_fields" => param_ios_specific_fields
+        }
+      }
+
+      it "should create a new notification for the user" do
+        @service_user.notifications.count.should eq(0)
+        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
+        @service_user.notifications.count.should eq(1)
+      end
+
+      it "should create a notification on the user with a messsage, ios_specific_fields and android_specific_fields" do
+        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
+        @service_user.notifications.first.message.should_not be_nil
+        @service_user.notifications.first.ios_specific_fields.should_not be_nil
+        @service_user.notifications.first.android_specific_fields.should_not be_nil
       end
 
     end
