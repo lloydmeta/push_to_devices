@@ -8,6 +8,7 @@ class Service
   # field <name>, :type => <type>, :default => <value>
   field :name, :type => String # name of the service registerd to this push server
   field :description, :type => String
+  field :interval, :type => Integer #interval at which to run notifications
   field :server_client_id, :type => String, default: ->{Service.securerandom_string}
   field :server_client_secret, :type => String, default: ->{Service.securerandom_string}
   field :mobile_client_id, :type => String, default: ->{Service.securerandom_string}
@@ -24,6 +25,12 @@ class Service
 
   def self.securerandom_string(n = 23)
     SecureRandom.urlsafe_base64(n, true)
+  end
+
+  def queue_notifications_for_users
+    users.all.each do |user|
+      user.async_send_notifications
+    end
   end
 
 end

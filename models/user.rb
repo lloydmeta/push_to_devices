@@ -17,4 +17,12 @@ class User
   # You can create a composite key in mongoid to replace the default id using the key macro:
   # key :field <, :another_field, :one_more ....>
 
+  def send_notifications
+    # stub
+  end
+
+  def async_send_notifications
+    Queue::High.enqueue(self, :send_notifications)
+  end
+
 end
