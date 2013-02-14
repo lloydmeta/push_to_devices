@@ -140,12 +140,6 @@ describe "NotificationsGenerator" do
 
       context "type set to android" do
 
-        it "should not fail" do
-          expect{
-            @notifications_generator.notifications(:android)
-          }.to_not raise_error
-        end
-
         it "should return an array" do
           @notifications_generator.notifications(:android).should be_a(Array)
         end
@@ -159,12 +153,6 @@ describe "NotificationsGenerator" do
       end
 
       context "type set to ios" do
-
-        it "should not fail" do
-          expect{
-            @notifications_generator.notifications(:ios)
-          }.to_not raise_error
-        end
 
         it "should return an array" do
           @notifications_generator.notifications(:ios).should be_a(Array)
