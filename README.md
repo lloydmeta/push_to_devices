@@ -12,7 +12,7 @@ You must decide on a way to uniquely identify your users in your system. This ca
 
 This server uses a very basic API key and secret authentication scheme (described later), and only supports JSON payloads.
 
-1. From your mobile application, register a user with this server by POSTing to `/users` in JSON with the following:
+From your mobile application, register a user with this server by POSTing to `/users` in JSON with the following:
 
 ```javascript
 {
@@ -21,10 +21,10 @@ This server uses a very basic API key and secret authentication scheme (describe
   "gcm_registration_id": "asdfdafsfads" //actual registration id from GCM
 }
 
-// You can actually post both the APN and GCM at the same time if you've got both on hand
+You can actually post both the APN and GCM at the same time if you've got both on hand
 ```
 
-2. From your web application, POST to `/users/:unique_hash/notifications` to send notifications to your iOS and Android users based on the unique hash. The server will then push the notifications at a preset interval (explained later) to all the devices the user currently has registered with the service. The JSON payload should look like this:
+From your web application, POST to `/users/:unique_hash/notifications` to send notifications to your iOS and Android users based on the unique hash. The server will then push the notifications at a preset interval (explained later) to all the devices the user currently has registered with the service. The JSON payload should look like this:
 
 ```javascript
 {
@@ -39,7 +39,15 @@ This server uses a very basic API key and secret authentication scheme (describe
 }
 ```
 
-3. That's it.
+Authentication
+-------------
+Once you create your Service (see below), go ahead make sure you sign your calls to the server by setting the following headers in your requests
+
+1. "server-client-id" from your service details
+2. "client-sig" SHA1 hexdigest of the client secret (from service) and the current Unix timestamp in seconds as a string
+3. "timestamp" the same string used to sign the signature
+
+For an example, check out `support/api_auth_helper.rb`
 
 Running the server
 ----------------
