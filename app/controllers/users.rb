@@ -12,11 +12,10 @@ PushToDeviceServer.controllers :users do
   # as well as optionally apn_device_token and/or gcm_registration_id
   post :create, :map => "/users/", :provides => :json do
     content_type :json
-
     begin
-      data=JSON.parse(request.body.string)
+      data=JSON.parse(request.body.read.to_s)
     rescue
-      error 422, {error: "invalid json"}
+      error 422, {error: "invalid json"}.to_json
     end
 
     error 422, {error: "unique_hash not provided"}.to_json unless data["unique_hash"]
@@ -49,7 +48,7 @@ PushToDeviceServer.controllers :users do
     content_type :json
 
     begin
-      data=JSON.parse(request.body.string)
+      data=JSON.parse(request.body.read.to_s)
     rescue
       error 422, {error: "invalid json"}
     end
