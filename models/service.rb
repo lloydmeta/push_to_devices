@@ -77,6 +77,7 @@ class Service
   end
 
   def send_gcm_notifications(notifications)
+    puts gcm_connection.host
     gcm_connection.send_notifications(notifications) unless notifications.empty?
   end
 

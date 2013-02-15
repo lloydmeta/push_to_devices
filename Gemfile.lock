@@ -9,6 +9,15 @@ GIT
       origin (~> 1.0)
       tzinfo (~> 0.3.22)
 
+GIT
+  remote: git@github.com:lloydmeta/pushmeup.git
+  revision: 339832d90b3d26b0ee34bbe25aa65991b588d1d2
+  branch: hotfix/allow_sending_custom_gcm_host
+  specs:
+    pushmeup (0.1.4.hf1)
+      httparty
+      json
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -80,9 +89,6 @@ GEM
       mail (~> 2.3.0)
       padrino-core (= 0.10.7)
     polyglot (0.3.3)
-    pushmeup (0.1.2)
-      httparty
-      json
     rack (1.5.2)
     rack-protection (1.3.2)
       rack
@@ -148,7 +154,7 @@ DEPENDENCIES
   mongo
   mongoid!
   padrino (= 0.10.7)
-  pushmeup
+  pushmeup!
   rack-test
   rake
   redis
