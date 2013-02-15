@@ -37,6 +37,14 @@ class Service
     SecureRandom.urlsafe_base64(n, true)
   end
 
+  def async_send_notifications_to_users
+    if Padrino.env == :test
+      send_notifications_to_users
+    else
+      Queue::High.enqueue(self, :send_notifications_to_users)
+    end
+  end
+
   def send_notifications_to_users
     per_batch = 1000
     0.step(users.count, per_batch) do |offset|
@@ -53,6 +61,21 @@ class Service
         ensure
           notifications_generator.clear_users_notifications!
         end
+    end
+  end
+
+  def async_delete_user_apn_tokens_based_on_apple_feedback
+    if Padrino.env == :test
+      delete_user_apn_tokens_based_on_apple_feedback
+    else
+      Queue::High.enqueue(self, :delete_user_apn_tokens_based_on_apple_feedback)
+    end
+  end
+
+  def delete_user_apn_tokens_based_on_apple_feedback
+    invalid_tokens = get_apn_feedback.map(&:token)
+    users.all.each do |u|
+      u.apn_device_tokens.where(:apn_device_token.in invalid_tokens).delete_all
     end
   end
 

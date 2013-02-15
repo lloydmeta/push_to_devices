@@ -4,7 +4,7 @@ module ServiceNotificationsEnqueue
 
   def self.perform(interval)
     Service.where(interval: interval.to_i).all.each do |service|
-      service.send_notifications_to_users
+      service.async_send_notifications_to_users
     end
   end
 

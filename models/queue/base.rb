@@ -1,16 +1,16 @@
 # Encoding: UTF-8
 # Credit to http://rubysource.com/simple-organized-queueing-with-resque/
+# Modified for Mongoid
 class Queue::Base
 
   class << self
 
     def enqueue(object, method, *args)
       meta = { 'method' => method }
-
       ensure_queueable!(object, method, *args)
 
       if is_model?(object)
-        Resque.enqueue(self, meta.merge('class' => object.class.name, 'id' => object.id), *args)
+        Resque.enqueue(self, meta.merge('class' => object.class.name, 'id' => object.id.to_s), *args)
       else
         if object.name.nil? #to support calling active record observer models
           Resque.enqueue(self, meta.merge('class' => object.class.name), *args)
@@ -22,7 +22,7 @@ class Queue::Base
 
     def perform(meta = { }, *args)
       if meta.has_key?('id')
-        if model = meta['class'].constantize.find_by_id(meta['id'])
+        if model = meta['class'].constantize.find(meta['id'])
           model.send(meta['method'], *args)
         end
       else
@@ -31,7 +31,7 @@ class Queue::Base
     end
 
     def is_model?(object)
-      object.class.respond_to?(:find_by_id)
+      object.class.respond_to?(:find_by)
     end
 
     private
