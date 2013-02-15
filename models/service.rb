@@ -24,6 +24,8 @@ class Service
   index({ server_client_id: 1}, {unique: true})
   index({ mobile_client_id: 1}, {unique: true})
 
+  validates :gcm_api_key, :presence => true
+
   has_many :users
 
   # You can create a composite key in mongoid to replace the default id using the key macro:
