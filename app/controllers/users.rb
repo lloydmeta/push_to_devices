@@ -73,11 +73,11 @@ PushToDeviceServer.controllers :users do
     end
   end
 
-  # for receiving POST requests to /users/group/notifications
+  # for receiving POST requests to /users/notifications
   # Allows for services to create notifications for a group of users
   # expects params to be JSON, with at least unique_hashes filled in
   # as well as optionally apn_device_token and/or gcm_registration_id
-  post :create_notifications_group, :map => "/users/group/notifications", :provides => :json do
+  post :create_notifications_group, :map => "/users/notifications", :provides => :json do
     content_type :json
 
     begin
@@ -86,16 +86,10 @@ PushToDeviceServer.controllers :users do
       error 422, {error: "invalid json"}
     end
 
-    error 422, {error: "unique_hashes not provided"}.to_json unless params[:unique_hashes]
+    error 422, {error: "unique_hashes not provided"}.to_json unless data["unique_hashes"]
 
     # should be 'reasonably fast' since we're using mongo ;p
-    params[:unique_hashes].each do |unique_hash|
-      service_user = api_current_user.users.where(
-        unique_hash: params[:unique_hash]
-      ).first
-
-      next if service_user.nil?
-
+    api_current_user.users.where(:unique_hash.in => data["unique_hashes"]).all.each do |service_user|
       service_user_notification = service_user.notifications.build
       service_user_notification.ios_specific_fields = data["ios_specific_fields"].to_json if data["ios_specific_fields"]
       service_user_notification.android_specific_fields = data["android_specific_fields"].to_json if data["android_specific_fields"]

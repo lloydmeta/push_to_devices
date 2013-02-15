@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe "UsersController", :type => :controller do
 
+  let(:ios_specific_fields){{badge: 5}}
+  let(:android_specific_fields){{google_is_the_best: true}}
+  let(:notification_data){{ios_specific_fields: ios_specific_fields, android_specific_fields: android_specific_fields}}
+
   before(:each) do
     @service = FactoryGirl.create(:service)
   end
@@ -185,10 +189,6 @@ describe "UsersController", :type => :controller do
       @service_user = @service.users.create!(unique_hash: @service_user_unique_hash)
     end
 
-    let(:ios_specific_fields){{badge: 5}}
-    let(:android_specific_fields){{google_is_the_best: true}}
-    let(:notification_data){{ios_specific_fields: ios_specific_fields, android_specific_fields: android_specific_fields}}
-
     context "unique_hash is invalid" do
 
       it "should be successful" do
@@ -271,6 +271,32 @@ describe "UsersController", :type => :controller do
         @service_user.notifications.first.android_specific_fields.should_not be_nil
       end
 
+    end
+
+  end # end posting to users/:unique_hash_notifications
+
+  context "POST users/notifications" do
+    before(:each) do
+      @service_user_unique_hash_1 = "asdf1234"
+      @service_user_unique_hash_2 = "asdf12343"
+      @service_user_unique_hash_3 = "asdf1234f"
+      @service_user_1 = @service.users.create!(unique_hash: @service_user_unique_hash_1)
+      @service_user_2 = @service.users.create!(unique_hash: @service_user_unique_hash_2)
+      @service_user_3 = @service.users.create!(unique_hash: @service_user_unique_hash_3)
+    end
+
+    it "should create notifications for all the users that have hashes in the unique_hashes key" do
+      @service_user_1.notifications.count.should eq(0)
+      @service_user_2.notifications.count.should eq(0)
+      @service_user_3.notifications.count.should eq(0)
+      full_params = {unique_hashes: [@service_user_unique_hash_1, @service_user_unique_hash_2, @service_user_unique_hash_3]}.merge(notification_data)
+      post "/users/notifications", params=full_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+      @service_user_1.reload
+      @service_user_2.reload
+      @service_user_3.reload
+      @service_user_1.notifications.count.should eq(1)
+      @service_user_2.notifications.count.should eq(1)
+      @service_user_3.notifications.count.should eq(1)
     end
 
   end
