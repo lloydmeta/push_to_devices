@@ -63,8 +63,8 @@ PushToDeviceServer.controllers :users do
 
     # build the notification
     @service_user_notification = @service_user.notifications.build
-    @service_user_notification.ios_specific_fields = ["ios_specific_fields"] if data["ios_specific_fields"]
-    @service_user_notification.android_specific_fields = ["android_specific_fields"] if data["android_specific_fields"]
+    @service_user_notification.ios_specific_fields = data["ios_specific_fields"].to_json if data["ios_specific_fields"]
+    @service_user_notification.android_specific_fields = data["android_specific_fields"].to_json if data["android_specific_fields"]
 
     if @service_user_notification.save
       @service_user_notification.to_json
