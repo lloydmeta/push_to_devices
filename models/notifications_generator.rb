@@ -15,14 +15,12 @@ class NotificationsGenerator
   end
 
   def notifications(type = :ios)
-    @notifications ||= begin
-      if type == :ios
-        ios_notifications_for_users
-      elsif type == :android
-        android_notifications_for_users
-      else
-        raise "illegal type #{type}"
-      end
+    if type == :ios
+      ios_notifications_for_users
+    elsif type == :android
+      android_notifications_for_users
+    else
+      raise "illegal type #{type}"
     end
   end
 
@@ -38,7 +36,7 @@ class NotificationsGenerator
     else
       user.notifications.order_by(:created_at.asc).map do |noti|
         user.apn_device_tokens.reduce([]){|ios_notis, apn_device_token|
-          APNS::Notification.new(apn_device_token, noti.ios_version)
+          APNS::Notification.new(apn_device_token.device_id, noti.ios_version)
         }
       end
     end

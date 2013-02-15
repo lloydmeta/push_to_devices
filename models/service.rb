@@ -47,8 +47,9 @@ class Service
         begin
           send_apn_notifications(ios_notifications)
           send_gcm_notifications(android_notifications)
-        rescue
-          true
+        rescue => e
+          Padrino::logger.info e
+          Padrino::logger.info e.backtrace
         ensure
           notifications_generator.clear_users_notifications!
         end
@@ -81,15 +82,19 @@ class Service
   end
 
   def apn_pem_path
-    pemfile.current_path
+    pemfile.current_path.gsub("/public/uploads", "/uploads")
   end
 
   def send_apn_notifications(notifications)
-    apn_connection.send_notifications(notifications) unless notifications.empty?
+    apn_connection.send_notifications(notifications) unless notifications.nil? || notifications.empty?
+  end
+
+  def get_apn_feedback
+    apn_connection.feedback
   end
 
   def send_gcm_notifications(notifications)
-    gcm_connection.send_notifications(notifications) unless notifications.empty?
+    gcm_connection.send_notifications(notifications) unless notifications.nil? || notifications.empty?
   end
 
 end

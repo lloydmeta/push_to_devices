@@ -11,6 +11,8 @@ class Notification
 
   embedded_in :user
 
+  DEFAULT_NOTIFICATION = {alert: "Hi", badge: 1, sound: "default"}
+
   # You can define indexes on documents using the index macro:
   # index :field <, :unique => true>
 
@@ -19,7 +21,7 @@ class Notification
 
   def ios_version
     if ! ios_specific_fields.empty?
-      JSON.parse(ios_specific_fields)
+      DEFAULT_NOTIFICATION.merge(JSON.parse(ios_specific_fields).symbolize_keys)
     else
       {}
     end
@@ -27,7 +29,7 @@ class Notification
 
   def android_version
     if ! android_specific_fields.empty?
-      JSON.parse(android_specific_fields)
+      JSON.parse(android_specific_fields).symbolize_keys
     else
       {}
     end

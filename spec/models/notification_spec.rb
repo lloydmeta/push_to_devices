@@ -48,7 +48,7 @@ describe "Notification Model" do
     describe "#ios_version" do
 
       it "should return a merged hash containing the main message and the ios specific fields" do
-        notification.ios_version.symbolize_keys.should eq(ios_specific_fields)
+        notification.ios_version.symbolize_keys.should eq(Notification::DEFAULT_NOTIFICATION.merge(ios_specific_fields))
       end
 
     end
