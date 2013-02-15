@@ -10,10 +10,10 @@ module ApiAuth
 
     def extract_api_credentials
       @api_credentials = {}
-      @api_credentials[:server_client_id] = request.env["server-client-id"]
-      @api_credentials[:mobile_client_id] = request.env["mobile-client-id"]
-      @api_credentials[:client_sig] = request.env["client-sig"]
-      @api_credentials[:timestamp] = request.env["timestamp"]
+      @api_credentials[:server_client_id] = request.env["HTTP_SERVER_CLIENT_ID"] || request.env["server-client-id"]
+      @api_credentials[:mobile_client_id] = request.env["HTTP_MOBILE_CLIENT_ID"] || request.env["mobile-client-id"]
+      @api_credentials[:client_sig] = request.env["HTTP_CLIENT_SIG"] || request.env["client-sig"]
+      @api_credentials[:timestamp] = request.env["HTTP_TIMESTAMP"] || request.env["timestamp"]
       @api_credentials
     end
 
@@ -46,8 +46,10 @@ module ApiAuth
       client_sig = api_credentials[:client_sig]
       # sanity check
       if [client_id, timestamp, client_sig].any?{|p| p.nil?}
+        content_type :json
         error 403, {error: "api-auth-err-ensure-client-id-timestamp-client-sig-all-sent"}.to_json
       elsif ! timestamp_valid?(timestamp)
+        content_type :json
         error 403, {error: "api-auth-err-timestamp-invalid"}.to_json
       elsif service = api_credentials_valid?(client_id, timestamp, client_sig, mobile_client)
         self.api_current_user = service
@@ -58,6 +60,7 @@ module ApiAuth
     end
 
     def api_deny_access
+      content_type :json
       error 403, {error: 'api-auth-err-authentication-failed'}.to_json
     end
 

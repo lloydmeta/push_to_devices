@@ -63,7 +63,7 @@ PushToDeviceServer.controllers :users do
     error 200, {error: "specified user does not exist in notification system"}.to_json if @service_user.nil?
 
     # build the notification
-    @service_user_notification = @service_user.notifications.build(message: data["message"])
+    @service_user_notification = @service_user.notifications.build
     @service_user_notification.ios_specific_fields = ["ios_specific_fields"] if data["ios_specific_fields"]
     @service_user_notification.android_specific_fields = ["android_specific_fields"] if data["android_specific_fields"]
 

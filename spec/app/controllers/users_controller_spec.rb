@@ -185,19 +185,19 @@ describe "UsersController", :type => :controller do
       @service_user = @service.users.create!(unique_hash: @service_user_unique_hash)
     end
 
-    let(:param_message){{value: 3}.to_json}
-    let(:param_ios_specific_fields){{badge: 5}.to_json}
-    let(:param_android_specific_fields){{google_is_the_best: true}.to_json}
+    let(:ios_specific_fields){{badge: 5}}
+    let(:android_specific_fields){{google_is_the_best: true}}
+    let(:notification_data){{ios_specific_fields: ios_specific_fields, android_specific_fields: android_specific_fields}}
 
     context "unique_hash is invalid" do
 
       it "should be successful" do
-        post "/users/1234asdf/notifications", params={"message" => param_message}.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        post "/users/1234asdf/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
         last_response.should be_successful
       end
 
       it "should have an error message in the response" do
-        post "/users/1234asdf/notifications", params={"message" => param_message}.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        post "/users/1234asdf/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
         JSON.parse(last_response.body)["error"].should_not be_nil
       end
 
@@ -207,91 +207,66 @@ describe "UsersController", :type => :controller do
 
       it "should create a new notification for the user" do
         @service_user.notifications.count.should eq(0)
-        post "/users/#{@service_user_unique_hash}/notifications", params={"message" => param_message}.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
         @service_user.reload
         @service_user.notifications.count.should eq(1)
       end
 
       it "should create a notification on the user with a messsage" do
-        post "/users/#{@service_user_unique_hash}/notifications", params={"message" => param_message}.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
         @service_user.reload
-        @service_user.notifications.first.message.should_not be_nil
-      end
-
-    end
-
-
-    context 'params["message"] with params["ios_specific_fields"]' do
-
-      let(:combined_params){
-        {
-          "message" => param_message,
-          "ios_specific_fields" => param_ios_specific_fields
-        }
-      }
-
-      it "should create a new notification for the user" do
-        @service_user.notifications.count.should eq(0)
-        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
-        @service_user.reload
-        @service_user.notifications.count.should eq(1)
-      end
-
-      it "should create a notification on the user with a messsage and ios_specific_fields" do
-        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
-        @service_user.reload
-        @service_user.notifications.first.message.should_not be_nil
         @service_user.notifications.first.ios_specific_fields.should_not be_nil
       end
 
     end
 
-    context 'params["message"] with params["android_specific_fields"]' do
 
-      let(:combined_params){
-        {
-          "message" => param_message,
-          "android_specific_fields" => param_android_specific_fields
-        }
-      }
+    context 'ios_specific_fields' do
 
       it "should create a new notification for the user" do
         @service_user.notifications.count.should eq(0)
-        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
         @service_user.reload
         @service_user.notifications.count.should eq(1)
       end
 
-      it "should create a notification on the user with a messsage and android_specific_fields" do
-        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+      it "should create a notification on the user ios_specific_fields" do
+        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
         @service_user.reload
-        @service_user.notifications.first.message.should_not be_nil
+        @service_user.notifications.first.ios_specific_fields.should_not be_nil
+      end
+
+    end
+
+    context 'android_specific_fields' do
+
+      it "should create a new notification for the user" do
+        @service_user.notifications.count.should eq(0)
+        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
+        @service_user.notifications.count.should eq(1)
+      end
+
+      it "should create a notification on the user with android_specific_fields" do
+        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        @service_user.reload
         @service_user.notifications.first.android_specific_fields.should_not be_nil
       end
 
     end
 
-    context 'params["message"] with params["ios_specific_fields"] and params["android_specific_fields] ' do
-
-      let(:combined_params){
-        {
-          "message" => param_message,
-          "android_specific_fields" => param_android_specific_fields,
-          "ios_specific_fields" => param_ios_specific_fields
-        }
-      }
+    context 'ios_specific_fields and android_specific_fields ' do
 
       it "should create a new notification for the user" do
         @service_user.notifications.count.should eq(0)
-        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
         @service_user.reload
         @service_user.notifications.count.should eq(1)
       end
 
       it "should create a notification on the user with a messsage, ios_specific_fields and android_specific_fields" do
-        post "/users/#{@service_user_unique_hash}/notifications", params=combined_params.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
+        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
         @service_user.reload
-        @service_user.notifications.first.message.should_not be_nil
         @service_user.notifications.first.ios_specific_fields.should_not be_nil
         @service_user.notifications.first.android_specific_fields.should_not be_nil
       end
