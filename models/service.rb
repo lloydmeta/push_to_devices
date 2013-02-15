@@ -1,17 +1,19 @@
 # encoding: utf-8
 require 'securerandom'
+require 'carrierwave/mongoid'
 
 class Service
   include Mongoid::Document
   include Mongoid::Timestamps # adds created_at and updated_at fields
 
+  mount_uploader :pemfile, PemfileUploader
+
   # field <name>, :type => <type>, :default => <value>
   field :name, :type => String # name of the service registerd to this push server
   field :description, :type => String
-  field :interval, :type => Integer #interval at which to run notifications
+  field :interval, :type => Integer, default: 5 #interval at which to run notifications
   field :apn_host, :type => String
   field :apn_port, :type => Integer
-  field :apn_pem_path, :type => String
   field :apn_pem_password, :type => String
   field :gcm_host, :type => String #interval at which to run notifications
   field :gcm_api_key, :type => String #interval at which to run notifications
@@ -74,12 +76,19 @@ class Service
     end
   end
 
+  def has_pemfile?
+    pemfile.present?
+  end
+
+  def apn_pem_path
+    pemfile.current_path
+  end
+
   def send_apn_notifications(notifications)
     apn_connection.send_notifications(notifications) unless notifications.empty?
   end
 
   def send_gcm_notifications(notifications)
-    puts gcm_connection.host
     gcm_connection.send_notifications(notifications) unless notifications.empty?
   end
 

@@ -1,6 +1,7 @@
 .DS_Store
 log/**/*
 tmp/**/*
+uploads/*
 bin/*
 vendor/gems/*
 !vendor/gems/cache/

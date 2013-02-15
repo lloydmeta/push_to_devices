@@ -35,6 +35,10 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
+
+  config.after(:suite) do
+      FileUtils.rm_rf(Dir["#{Padrino.root}/uploads/#{Padrino.env}/"])
+  end
 end
 
 def app

@@ -13,8 +13,14 @@
 .group
   =f.label :interval
   =f.error_message_on :interval
-  =f.select :role, :options => [["1 minute", 1], ["5 minutes", 5], ["10 minutes", 10], ["15 mintes", 15], ["30 minutes", 30], ["1 hour", 60]]
+  =f.select :interval, :options => [["1 minute", 1], ["5 minutes", 5], ["10 minutes", 10], ["15 mintes", 15], ["30 minutes", 30], ["1 hour", 60]]
   %span.description Ex: Select an interval
+
+.group
+  =f.label :pemfile
+  =f.error_message_on :pemfile
+  =f.file_field :pemfile
+  %span.description Ex: Your pem file
 
 .group
   =f.label :apn_host
@@ -26,12 +32,6 @@
   =f.label :apn_port
   =f.error_message_on :apn_port
   =f.text_field :apn_port, :class => :text_field
-  %span.description Ex: a simple text
-
-.group
-  =f.label :apn_pem_path
-  =f.error_message_on :apn_pem_path
-  =f.text_field :apn_pem_path, :class => :text_field
   %span.description Ex: a simple text
 
 .group

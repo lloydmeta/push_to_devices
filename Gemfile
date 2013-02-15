@@ -23,6 +23,9 @@ gem 'resque-scheduler', :require => 'resque_scheduler'
 # Gem for pushing notifications to Apple and Google
 gem 'pushmeup', :git => "git@github.com:lloydmeta/pushmeup.git", :branch => "hotfix/allow_sending_custom_gcm_host"
 
+# PEM File upload
+gem 'carrierwave'
+gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 
 # Test requirements
 group "test" do

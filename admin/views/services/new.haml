@@ -8,7 +8,7 @@
       =pat(:new)
       =mt(:service)
     .inner
-      -form_for :service, url(:services, :create), :class => :form do |f|
+      -form_for :service, url(:services, :create), :class => :form, :multipart => true do |f|
         =partial "services/form", :locals => { :f => f }
 
 -content_for :sidebar, partial("base/sidebar")
