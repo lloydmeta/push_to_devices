@@ -42,6 +42,38 @@ describe "Service Model" do
 
   end
 
+  context "#delete_user_apn_tokens_based_on_apple_feedback" do
+    before(:each) do
+      @service = FactoryGirl.create(:service)
+      @service_user_unique_hash_1 = "asdf1234"
+      @service_user_unique_hash_2 = "asdf12343"
+      @service_user_unique_hash_3 = "asdf1234f"
+      @user_1_apn_token = "asdf"
+      @user_2_apn_token = "asdffadsf"
+      @user_3_apn_token = "asdasfadsfdf"
+      @service_user_1 = @service.users.create!(unique_hash: @service_user_unique_hash_1)
+      @service_user_2 = @service.users.create!(unique_hash: @service_user_unique_hash_2)
+      @service_user_3 = @service.users.create!(unique_hash: @service_user_unique_hash_3)
+      @token_1 = @service_user_1.apn_device_tokens.build(apn_device_token: @user_1_apn_token)
+      @token_2 = @service_user_2.apn_device_tokens.build(apn_device_token: @user_2_apn_token)
+      @token_3 = @service_user_3.apn_device_tokens.build(apn_device_token: @user_3_apn_token)
+      @token_1.save!
+      @token_2.save!
+      @token_3.save!
+    end
+
+    it "should delete the tokens reported as borked by Apple feedback" do
+      @service.stub(:get_apn_feedback){[{token: @user_1_apn_token}, {token: @user_2_apn_token}, {token: @user_3_apn_token}]}
+      @service.delete_user_apn_tokens_based_on_apple_feedback
+      @service_user_1.reload
+      @service_user_2.reload
+      @service_user_3.reload
+      @service_user_1.apn_device_tokens.should be_empty
+      @service_user_2.apn_device_tokens.should be_empty
+      @service_user_3.apn_device_tokens.should be_empty
+    end
+  end
+
 
   context "sending notifications" do
 

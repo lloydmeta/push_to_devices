@@ -68,14 +68,14 @@ class Service
     if Padrino.env == :test
       delete_user_apn_tokens_based_on_apple_feedback
     else
-      Queue::High.enqueue(self, :delete_user_apn_tokens_based_on_apple_feedback)
+      Queue::Low.enqueue(self, :delete_user_apn_tokens_based_on_apple_feedback)
     end
   end
 
   def delete_user_apn_tokens_based_on_apple_feedback
-    invalid_tokens = get_apn_feedback.map(&:token)
+    invalid_tokens = get_apn_feedback.map{|f|f[:token]}
     users.all.each do |u|
-      u.apn_device_tokens.where(:apn_device_token.in invalid_tokens).delete_all
+      u.apn_device_tokens.where(:apn_device_token.in => invalid_tokens).delete_all
     end
   end
 

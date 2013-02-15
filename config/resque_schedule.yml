@@ -34,4 +34,9 @@ hourly_interval_notification_send:
   args: 60
   description: Runs the 60 minute enqueue for services
 
+daily_retrieval_of_apn_feedback:
+  every: 1d
+  class: ServiceFeedbackEnqueue
+  description: Runs the daily retrieval of APN feedback for all services
+
 
