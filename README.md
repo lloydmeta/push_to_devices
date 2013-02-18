@@ -6,7 +6,7 @@ Status](https://secure.travis-ci.org/lloydmeta/push_to_devices.png)](http://trav
 
 [![Code Climate](https://codeclimate.com/github/lloydmeta/push_to_devices.png)](https://codeclimate.com/github/lloydmeta/push_to_devices)
 
-A REST-ful Padrino-based server for you to send push notifications to iOS and Android devices.
+A REST-ful Padrino-based server for you to send push notifications to iOS and Android devices. There is a Ruby client library/gem [as well](https://github.com/lloydmeta/push_to_devices_rb).
 
 This server will allow you to create Services (i.e. your application with production Apple PEM file and production GCM API keys) that you register users to and then send notifications to that service's users.
 
