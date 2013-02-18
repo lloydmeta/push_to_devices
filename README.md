@@ -161,7 +161,7 @@ Running the server
 2. `padrino rake resque:scheduler`
 3. `padrino rake resque:work`
 4. Run `padrino rake seed` to create an admin user
-5. Log into Padrino admin (/admin) to create and configure a new service (filling in GCM api key, uploading your [PEM file](https://github.com/NicosKaralis/pushmeup/wiki/APNS-iOS-and-OS-X))
+5. Log into Padrino admin (/admin/services/new) to create and configure a new service (filling in GCM api key __and__ uploading your [PEM file](https://github.com/NicosKaralis/pushmeup/wiki/APNS-iOS-and-OS-X))
 
 ## License
 
