@@ -18,6 +18,8 @@ Gems used include:
 * Resque-scheduler
 * Redis
 
+__Note__: For now, only Ruby 1.9.3 is supported and all payloads must be in JSON. Hope that isn't a problem for you !
+
 Basic Overview
 ------------
 
