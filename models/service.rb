@@ -65,7 +65,7 @@ class Service
   def batch_iterate_users(batch_size = 1000)
     per_batch = batch_size
     0.step(users.count, per_batch) do |offset|
-      users_batch = users.limit(per_batch).skip(offset)
+      users_batch = users.skip(offset).limit(per_batch)
       yield users_batch if block_given?
     end
   end
