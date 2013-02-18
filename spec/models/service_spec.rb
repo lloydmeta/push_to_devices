@@ -110,4 +110,17 @@ describe "Service Model" do
 
   end
 
+  describe "#batch_iterate_users" do
+
+    it "should iterate over the default 1000 users at a time" do
+      2000.times do
+        FactoryGirl.create(:user, :service => service)
+      end
+
+      service.batch_iterate_users do |batch|
+        batch.all.to_a.size.should satisfy{|batch_size| [1000, 0].include? batch_size}
+      end
+    end
+  end
+
 end

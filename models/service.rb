@@ -46,21 +46,27 @@ class Service
   end
 
   def send_notifications_to_users
-    per_batch = 1000
+    batch_iterate_users do |users_batch|
+      notifications_generator = NotificationsGenerator.new(users: users_batch)
+      ios_notifications = notifications_generator.notifications(:ios)
+      android_notifications = notifications_generator.notifications(:android)
+      begin
+        send_apn_notifications(ios_notifications)
+        send_gcm_notifications(android_notifications)
+      rescue => e
+        Padrino::logger.info e
+        Padrino::logger.info e.backtrace
+      ensure
+        notifications_generator.clear_users_notifications!
+      end
+    end
+  end
+
+  def batch_iterate_users(batch_size = 1000)
+    per_batch = batch_size
     0.step(users.count, per_batch) do |offset|
-        users_batch = users.limit(per_batch).skip(offset)
-        notifications_generator = NotificationsGenerator.new(users: users_batch)
-        ios_notifications = notifications_generator.notifications(:ios)
-        android_notifications = notifications_generator.notifications(:android)
-        begin
-          send_apn_notifications(ios_notifications)
-          send_gcm_notifications(android_notifications)
-        rescue => e
-          Padrino::logger.info e
-          Padrino::logger.info e.backtrace
-        ensure
-          notifications_generator.clear_users_notifications!
-        end
+      users_batch = users.skip(offset).limit(per_batch)
+      yield users_batch if block_given?
     end
   end
 
