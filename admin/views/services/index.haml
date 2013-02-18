@@ -13,22 +13,22 @@
           %th.first=mat(:service, :name)
           %th=mat(:service, :description)
           %th=mat(:service, :interval)
-          %th=mat(:service, :apn_host)
           %th=mat(:service, :has_pemfile?)
-          %th=mat(:service, :apn_port)
-          %th=mat(:service, :gcm_host)
-          %th=mat(:service, :created_at)
+          %th=mat(:service, "Server Client Id")
+          %th=mat(:service, "Server Client Secret")
+          %th=mat(:service, "Mobile Client Id")
+          %th=mat(:service, "Mobile Client Secret")
           %th.last="&nbsp;"
         -@services.each do |service|
           %tr
             %td.first=service.name
             %td=service.description
             %td=service.interval
-            %td=service.apn_host
             %td=service.has_pemfile?
-            %td=service.apn_port
-            %td=service.gcm_host
-            %td=service.created_at
+            %td=service.server_client_id
+            %td=service.server_client_secret
+            %td=service.mobile_client_id
+            %td=service.mobile_client_secret
             %td.last
               =button_to pat(:edit), url(:services, :edit, :id => service.id), :method => :get, :class => :button_to
               ="|"
