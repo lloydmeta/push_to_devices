@@ -3,10 +3,12 @@ Push to Device
 
 A REST-ful Padrino-based server for you to send push notifications to iOS and Android devices.
 
-This server will allow you to create Services (i.e. your application with production Apple PEM file and production GCM API keys) that you register users to and then send notifications to that service's users. Out of the box, you can send notifications to users in 1, 5, 10, 15, 30 and 60 minute intervals, but this can be customised. It will also take care of pulling Apple APN feedback on a daily basis for you as well.
+This server will allow you to create Services (i.e. your application with production Apple PEM file and production GCM API keys) that you register users to and then send notifications to that service's users.
+
+Out of the box, you can send notifications to users in 1, 5, 10, 15, 30 and 60 minute intervals, but this can be customised. It will also take care of pulling Apple APN feedback on a daily basis for you as well to make sure that devices to which notifications can no longer be pushed stop receiving notifications from you.
 
 Gems used include:
-* PushMeUp
+* PushMeUp to take care of sending iOS and Android notifications. iOS notifications are sent in batches.
 * Resque
 * Resque-scheduler
 * Redis
