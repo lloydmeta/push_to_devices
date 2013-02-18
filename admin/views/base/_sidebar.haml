@@ -1,11 +1,8 @@
 .block
-  %h3 Simple Block
+  %h3 Hint
   .content
     %p
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-.block
-  %h3 Links
-  %ul.navigation
-    %li=link_to "Link 1"
-    %li=link_to "Link 2"
+      As long as your users have a unique hash that identifies them
+      = succeed '' do
+        %em within your service,
+      you are fine, because users are registered and sent notifications based on the API keys used during authentication, which are unique on a per service basis

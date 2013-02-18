@@ -1,25 +1,21 @@
 #block-text.block
   .content
-    %h2.title Dashboard
+    %h2.title Push to Devices
     .inner
       %p.first
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Welcome to Push To Devices. You define a number of different "services" (or just one if you wish) in the Services section and push iOS and Android notifications to your users via a REST API.
         %span.hightlight
-          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          To start, go to Services up top and define a new Service now.
       %p
-        %span.small
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
+        %span.hightlight
+          Don't forget that you must have .pem file for iOS push notifications and a GCM API key in order to push to your users.
+      %p
+        %span.hightlight
+          You must also define a method of creating a unique for each user in your service so that your can send notifications to the right users.
       %p
         %span.gray
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-      %hr
-      %p
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-        %span.hightlight
-          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          If you have questions, ideas or contributions, don't hesitate to go to the
+          =link_to("Github repo", "https://github.com/lloydmeta/push_to_devices")
+
 
 -content_for :sidebar, partial("base/sidebar")
