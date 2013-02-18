@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/lloydmeta/pushmeup.git
+  revision: 339832d90b3d26b0ee34bbe25aa65991b588d1d2
+  branch: hotfix/allow_sending_custom_gcm_host
+  specs:
+    pushmeup (0.1.4.hf1)
+      httparty
+      json
+
+GIT
   remote: git://github.com/mongoid/mongoid.git
   revision: d4ad411b600bcd38dd4760d7a7799eb883748275
   branch: master
@@ -8,15 +17,6 @@ GIT
       moped (~> 1.4)
       origin (~> 1.0)
       tzinfo (~> 0.3.22)
-
-GIT
-  remote: git@github.com:lloydmeta/pushmeup.git
-  revision: 339832d90b3d26b0ee34bbe25aa65991b588d1d2
-  branch: hotfix/allow_sending_custom_gcm_host
-  specs:
-    pushmeup (0.1.4.hf1)
-      httparty
-      json
 
 GEM
   remote: http://rubygems.org/
@@ -67,7 +67,7 @@ GEM
       mime-types (~> 1.19)
       mongoid (~> 3.0)
     moped (1.4.2)
-    multi_json (1.6.0)
+    multi_json (1.6.1)
     multi_xml (0.5.3)
     nokogiri (1.5.6)
     origin (1.0.11)
