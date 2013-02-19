@@ -203,24 +203,6 @@ describe "UsersController", :type => :controller do
 
     end
 
-    context 'params["message"] only' do
-
-      it "should create a new notification for the user" do
-        @service_user.notifications.count.should eq(0)
-        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
-        @service_user.reload
-        @service_user.notifications.count.should eq(1)
-      end
-
-      it "should create a notification on the user with a messsage" do
-        post "/users/#{@service_user_unique_hash}/notifications", params=notification_data.to_json, rack_env=credentials_to_headers(server_api_auth_params(@service.server_client_id, @service.server_client_secret))
-        @service_user.reload
-        @service_user.notifications.first.ios_specific_fields.should_not be_nil
-      end
-
-    end
-
-
     context 'ios_specific_fields' do
 
       it "should create a new notification for the user" do
