@@ -4,12 +4,12 @@ PushToDeviceServer.controllers :users do
   include ApiAuth
   include CorsHelpers
 
-  before :except => :cors_preflight do
+  before :except => :corspreflight do
     api_authenticate
   end
 
   # preflight CORS
-  options :cors_preflight, :map => '/users/' do
+  options :corspreflight, :map => '/users/' do
     cors_headers
     " "
   end
@@ -18,6 +18,7 @@ PushToDeviceServer.controllers :users do
   # expects params to be JSON, with at least unique_hash
   # as well as optionally apn_device_token and/or gcm_registration_id
   post :create, :map => "/users/", :provides => :json do
+    cors_headers
     content_type :json
     begin
       data=JSON.parse(request.body.read.to_s)
