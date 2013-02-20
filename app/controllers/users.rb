@@ -11,6 +11,7 @@ PushToDeviceServer.controllers :users do
   # preflight CORS
   options '/users/' do
     cors_headers
+    " "
   end
 
   # for receiving POST requests to /users/
