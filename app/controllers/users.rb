@@ -4,7 +4,7 @@ PushToDeviceServer.controllers :users do
   include ApiAuth
   include CorsHelpers
 
-  before do
+  before :except => :cors_preflight do
     api_authenticate
   end
 
