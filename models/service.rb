@@ -46,7 +46,7 @@ class Service
   end
 
   def send_notifications_to_users
-    batch_iterate_users do |users_batch|
+    batch_iterate_users_with_notifications do |users_batch|
       notifications_generator = NotificationsGenerator.new(users: users_batch)
       ios_notifications = notifications_generator.notifications(:ios)
       android_notifications = notifications_generator.notifications(:android)
@@ -62,10 +62,12 @@ class Service
     end
   end
 
-  def batch_iterate_users(batch_size = 1000)
+  # Method for iteration of users with notifications. Takes a block
+  # And passes back the entire batch of users one at at time
+  def batch_iterate_users_with_notifications(batch_size = 1000)
     per_batch = batch_size
     0.step(users.count, per_batch) do |offset|
-      users_batch = users.skip(offset).limit(per_batch)
+      users_batch = users.where("this.notifications && this.notifications.length > 0").skip(offset).limit(per_batch)
       yield users_batch if block_given?
     end
   end
