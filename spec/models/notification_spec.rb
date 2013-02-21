@@ -7,7 +7,7 @@ describe "Notification Model" do
   }
 
   let(:android_specific_fields){
-    {random_hash_key: "ios random value"}
+    {random_hash_key: "android random value"}
   }
 
   let(:notification) {

@@ -110,16 +110,27 @@ describe "Service Model" do
 
   end
 
-  describe "#batch_iterate_users" do
+  describe "#batch_iterate_users_with_notifications" do
 
     it "should iterate over the default 1000 users at a time" do
+      2000.times do
+        FactoryGirl.create(:user, :service => service).notifications.create(ios_specific_fields: {random_hash_key: "ios random value"}. to_json, android_specific_fields:  {random_hash_key: "android random value"}.to_json)
+      end
+
+      service.batch_iterate_users_with_notifications do |batch|
+        batch.all.to_a.size.should satisfy{|batch_size| [1000, 0].include? batch_size}
+      end
+    end
+
+    it "should not iterate over users without notificatoins" do
       2000.times do
         FactoryGirl.create(:user, :service => service)
       end
 
-      service.batch_iterate_users do |batch|
-        batch.all.to_a.size.should satisfy{|batch_size| [1000, 0].include? batch_size}
+      service.batch_iterate_users_with_notifications do |batch|
+        batch.all.to_a.size.should eq(0)
       end
+
     end
   end
 
