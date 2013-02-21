@@ -3,8 +3,6 @@ class PushToDeviceServer < Padrino::Application
   #register Padrino::Mailer
   register Padrino::Helpers
 
-  disable :sessions
-
   ##
   # Caching support
   #

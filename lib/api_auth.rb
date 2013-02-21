@@ -46,11 +46,9 @@ module ApiAuth
       client_sig = api_credentials[:client_sig]
       # sanity check
       if [client_id, timestamp, client_sig].any?{|p| p.nil?}
-        content_type :json
-        error 403, {error: "api-auth-err-ensure-client-id-timestamp-client-sig-all-sent"}.to_json
+        api_deny_access("api-auth-err-ensure-client-id-timestamp-client-sig-all-sent")
       elsif ! timestamp_valid?(timestamp)
-        content_type :json
-        error 403, {error: "api-auth-err-timestamp-invalid"}.to_json
+        api_deny_access("api-auth-err-timestamp-invalid")
       elsif service = api_credentials_valid?(client_id, timestamp, client_sig, mobile_client)
         self.api_current_user = service
         service
@@ -59,9 +57,10 @@ module ApiAuth
       end
     end
 
-    def api_deny_access
+    def api_deny_access(message="api-auth-err-authentication-failed")
+      Padrino::logger.info "API Auth failed: #{message}"
       content_type :json
-      error 403, {error: 'api-auth-err-authentication-failed'}.to_json
+      error 403, {error: message}.to_json
     end
 
     def api_signed_in?
