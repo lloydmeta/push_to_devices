@@ -20,6 +20,8 @@ Gems used include:
 
 __Note__: For now, only Ruby 1.9.3 is supported and all payloads must be in JSON. Hope that isn't a problem for you !
 
+__Note__: the POST /users/ endpoint by default supports CORs ([Cross Origin Resource Sharing](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing)) but can be modified to do without.
+
 Basic Overview
 ------------
 
