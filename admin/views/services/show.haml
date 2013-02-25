@@ -26,7 +26,7 @@
           %td
             %strong Mobile Client Secret
           %td=@service.mobile_client_secret
-      =button_to "Send all notifications", url(:services, :send_all_notifications, :id => @service.id), :method => :put, :class => :button_to
+      =button_to "Send all notifications", url(:services, :send_all_notifications, :id => @service.id), :method => :put, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
       %h2
         Users
       %table.table
@@ -34,7 +34,7 @@
           %th.first=mat(:user, :unique_hash)
           %th=mat(:user, :notifications_count)
           %th=mat(:user, :has_APN_token)
-          %th=mat(:user, :has_GCM_id)
+          %th=mat(:user, :has_GCM_token)
           %th.last="&nbsp;"
         -@service_users.each do |user|
           %tr
@@ -42,5 +42,6 @@
             %td=user.notifications.count
             %td=user.apn_device_tokens.count > 0
             %td=user.gcm_device_tokens.count >0
+      =will_paginate @service_users
 
 -content_for :sidebar, partial("base/sidebar")

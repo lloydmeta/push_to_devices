@@ -37,7 +37,7 @@ Admin.controllers :services do
 
   get :show, :with => :id do
     @service = Service.find(params[:id])
-    @service_users = @service.users
+    @service_users = @service.users.paginate(page: params[:page])
     render 'services/show'
   end
 

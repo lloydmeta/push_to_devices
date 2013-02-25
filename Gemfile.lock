@@ -8,6 +8,13 @@ GIT
       json
 
 GIT
+  remote: git://github.com/mislav/will_paginate.git
+  revision: 61c9f49a918824a52a858df957c1ed2d4b6a2067
+  branch: master
+  specs:
+    will_paginate (3.0.4)
+
+GIT
   remote: git://github.com/mongoid/mongoid.git
   revision: d4ad411b600bcd38dd4760d7a7799eb883748275
   branch: master
@@ -176,3 +183,4 @@ DEPENDENCIES
   sinatra-flash
   webmock
   webrat
+  will_paginate!
