@@ -29,7 +29,8 @@
           %td
             %strong GCM Token count
           %td=@user.gcm_device_tokens.count
-      =button_to "Send #{@user.service.name} service notifications", url(:services, :send_all_notifications, :id => @user.service.id), :method => :put, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
+      %br
+      =button_to "Send #{@user.service.name} Service notifications", url(:services, :send_all_notifications, :id => @user.service.id), :method => :put, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
       %h2
         APN Tokens
       %table.table
