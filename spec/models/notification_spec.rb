@@ -48,7 +48,7 @@ describe "Notification Model" do
     describe "#ios_version" do
 
       it "should return a merged hash containing the main message and the ios specific fields" do
-        notification.ios_version.symbolize_keys.should eq(Notification::DEFAULT_NOTIFICATION.merge(ios_specific_fields))
+        notification.ios_version.symbolize_keys.should eq(Notification::DEFAULT_NOTIFICATION_IOS.merge(ios_specific_fields))
       end
 
     end
@@ -57,7 +57,7 @@ describe "Notification Model" do
 
       it "should return a merged hash containing the main message and the android specific fields" do
         notification.android_specific_fields=android_specific_fields.to_json
-        notification.android_version.symbolize_keys.should eq(android_specific_fields)
+        notification.android_version.symbolize_keys.should eq(Notification::DEFAULT_NOTIFICATION_DATA_ANDROID.merge(Notification::DEFAULT_NOTIFICATION_OPTIONS_ANDROID).merge(android_specific_fields))
       end
 
     end

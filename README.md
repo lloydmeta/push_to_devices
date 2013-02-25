@@ -53,8 +53,13 @@ From your web application, POST to `/users/:unique_hash/notifications` to send n
     "badge": 1
   },
   "android_specific_fields":{
-    "title": "Your app name",
-    "text": "Alert alert!"
+    "data" : {
+      "title": "Your app name",
+      "text": "Alert alert!"
+    },
+    "options" : {
+      "time_to_live": 3600 //seconds; by default we set this to 1 week
+    }
   }
 }
 ```
@@ -139,13 +144,18 @@ http = Net::HTTP.new(
 # Building the request
 request = Net::HTTP::Post.new("/users/#{user_unique_hash}/notifications", initheader = {'Content-Type' =>'application/json'})
 request.body = {
-  "ios_specific_fields":{
-    "alert": "Your post got a new comment!",
-    "badge": 3
+  "ios_specific_fields" => {
+    "alert" => "Your post got a new comment!",
+    "badge" => 3
   },
-  "android_specific_fields":{
-    "title": "AppName",
-    "text": "Your post got a new comment!"
+  "android_specific_fields" => {
+    "data" => {
+      "title"=> "Your app name",
+      "text"=> "Alert alert!"
+    },
+    "options" => {
+      "time_to_live"=> 3600
+    }
   }
 }
 

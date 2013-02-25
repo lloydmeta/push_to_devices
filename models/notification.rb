@@ -16,7 +16,8 @@ class Notification
 
   DEFAULT_NOTIFICATION_IOS = {alert: "Hi", badge: 1, sound: "default"}
 
-  DEFAULT_NOTIFICATION_ANDROID = {options: {time_to_live: 3600, delay_while_idle: false}}
+  DEFAULT_NOTIFICATION_OPTIONS_ANDROID = {options: {time_to_live: 1.week.to_i}}
+  DEFAULT_NOTIFICATION_DATA_ANDROID = {data: {title: "My App", text: "Hello"}}
 
   # You can define indexes on documents using the index macro:
   # index :field <, :unique => true>
@@ -34,7 +35,8 @@ class Notification
 
   def android_version
     if ! android_specific_fields.empty?
-      DEFAULT_NOTIFICATION_ANDROID.merge(data: JSON.parse(android_specific_fields).symbolize_keys)
+      android_notification = JSON.parse(android_specific_fields).symbolize_keys
+      DEFAULT_NOTIFICATION_DATA_ANDROID.merge(DEFAULT_NOTIFICATION_OPTIONS_ANDROID).merge(android_notification)
     else
       {}
     end
