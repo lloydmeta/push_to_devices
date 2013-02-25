@@ -60,7 +60,7 @@
               =button_to pat(:delete), url(:users, :destroy_token, :user_id => @user.id, :token_type => "gcm", :token_id => token._id), :method => :delete, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
       %br
       %h2
-        Notifications
+        Unsent Notifications
       %table.table
         %tr
           %th.first=mat(:notification, :ios_specific_fields)
