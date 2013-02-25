@@ -1,0 +1,76 @@
+.block
+  .secondary-navigation
+    %ul.wat-cf
+      %li.first=link_to pat(:list), url(:users, :index)
+      %li=link_to pat(:edit), url(:users, :edit, :id => @user.id)
+      %li.active=link_to pat(:show), url(:users, :show, :id => @user.id)
+  .content
+    %h2.title
+      =@user.unique_hash
+    .inner
+      %table.table
+        %tr
+          %td
+            %strong Service Name
+          %td=@user.service.name
+        %tr
+          %td
+            %strong Unsent notifications
+          %td=@user.notifications.count
+        %tr
+          %td
+            %strong Created at
+          %td=@user.created_at
+        %tr
+          %td
+            %strong APN Token count
+          %td=@user.apn_device_tokens.count
+        %tr
+          %td
+            %strong GCM Token count
+          %td=@user.gcm_device_tokens.count
+      =button_to "Send #{@user.service.name} service notifications", url(:services, :send_all_notifications, :id => @user.service.id), :method => :put, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
+      %h2
+        APN Tokens
+      %table.table
+        %tr
+          %th.first=mat(:apn_device_token, :device_id)
+          %th=mat(:apn_device_token, :created_at)
+          %th.last="&nbsp;"
+        -@user.apn_device_tokens.each do |token|
+          %tr
+            %td.first=token.device_id
+            %td=token.created_at
+            %td.last
+              =button_to pat(:delete), url(:users, :destroy_token, :user_id => @user.id, :token_type => "apn", :token_id => token._id), :method => :delete, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
+      %br
+      %h2
+        GCM Tokens
+      %table.table
+        %tr
+          %th.first=mat(:gcm_device_token, :registration_id)
+          %th=mat(:gcm_device_token, :created_at)
+          %th.last="&nbsp;"
+        -@user.gcm_device_tokens.each do |token|
+          %tr
+            %td.first=token.device_id
+            %td=token.created_at
+            %td.last
+              =button_to pat(:delete), url(:users, :destroy_token, :user_id => @user.id, :token_type => "gcm", :token_id => token._id), :method => :delete, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
+      %br
+      %h2
+        Notifications
+      %table.table
+        %tr
+          %th.first=mat(:notification, :ios_specific_fields)
+          %th=mat(:notification, :android_specific_fields)
+          %th=mat(:notification, :created_at)
+          %th.last="&nbsp;"
+        -@user_notifications.each do |notification|
+          %tr
+            %td.first=notification.ios_specific_fields
+            %td=notification.android_specific_fields
+            %td=notification.created_at
+      =will_paginate @user_notifications
+
+-content_for :sidebar, partial("base/sidebar")
