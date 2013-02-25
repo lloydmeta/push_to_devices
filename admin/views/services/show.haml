@@ -38,7 +38,7 @@
           %th.last="&nbsp;"
         -@service_users.each do |user|
           %tr
-            %td.first=user.unique_hash
+            %td.first=button_to user.unique_hash, url(:users, :show, :id => user.id), :method => :get, :class => :button_to
             %td=user.notifications.count
             %td=user.apn_device_tokens.count > 0
             %td=user.gcm_device_tokens.count >0
