@@ -11,6 +11,9 @@ class Notification
 
   embedded_in :user
 
+  after_create :increment_user_notifications_count
+  after_destroy :decrement_user_notifications_count
+
   DEFAULT_NOTIFICATION = {alert: "Hi", badge: 1, sound: "default"}
 
   # You can define indexes on documents using the index macro:
@@ -44,5 +47,15 @@ class Notification
           errors.add :base, "Invalid JSON: #{field}"
         end
       end
+    end
+
+    def increment_user_notifications_count
+      parent = self._parent
+      parent.inc(:notifications_count, 1)
+    end
+
+    def decrement_user_notifications_count
+      parent = self._parent
+      parent.inc(:notifications_count, -1)
     end
 end

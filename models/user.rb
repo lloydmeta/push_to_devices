@@ -5,6 +5,7 @@ class User
 
   # field <name>, :type => <type>, :default => <value>
   field :unique_hash, :type => String
+  field :notifications_count, :type => Integer
 
   # You can define indexes on documents using the index macro:
   index({ unique_hash: 1}, {unique: true})

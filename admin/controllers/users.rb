@@ -1,7 +1,7 @@
 Admin.controllers :users do
 
   get :index do
-    @users = User.scoped.paginate(page: params[:page])
+    @users = User.order_by([:notifications_count, -1]).paginate(page: params[:page])
     render 'users/index'
   end
 

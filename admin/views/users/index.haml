@@ -11,12 +11,14 @@
         %tr
           %th.first=mat(:user, :unique_hash)
           %th=mat(:user, "Service (name)")
+          %th=mat(:user, "Unsent notifications")
           %th=mat(:user, :created_at)
           %th.last="&nbsp;"
         -@users.each do |user|
           %tr
             %td.first=button_to user.unique_hash, url(:users, :show, :id => user.id), :method => :get, :class => :button_to
             %td=user.service.name
+            %td=user.notifications.count
             %td=user.created_at
             %td.last
               =button_to pat(:edit), url(:users, :edit, :id => user.id), :method => :get, :class => :button_to
