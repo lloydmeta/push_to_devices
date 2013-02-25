@@ -14,7 +14,9 @@ class Notification
   after_create :increment_user_notifications_count
   after_destroy :decrement_user_notifications_count
 
-  DEFAULT_NOTIFICATION = {alert: "Hi", badge: 1, sound: "default"}
+  DEFAULT_NOTIFICATION_IOS = {alert: "Hi", badge: 1, sound: "default"}
+
+  DEFAULT_NOTIFICATION_ANDROID = {options: {time_to_live: 3600, delay_while_idle: false}}
 
   # You can define indexes on documents using the index macro:
   # index :field <, :unique => true>
@@ -24,7 +26,7 @@ class Notification
 
   def ios_version
     if ! ios_specific_fields.empty?
-      DEFAULT_NOTIFICATION.merge(JSON.parse(ios_specific_fields).symbolize_keys)
+      DEFAULT_NOTIFICATION_IOS.merge(JSON.parse(ios_specific_fields).symbolize_keys)
     else
       {}
     end
@@ -32,7 +34,7 @@ class Notification
 
   def android_version
     if ! android_specific_fields.empty?
-      JSON.parse(android_specific_fields).symbolize_keys
+      DEFAULT_NOTIFICATION_ANDROID.merge(data: JSON.parse(android_specific_fields).symbolize_keys)
     else
       {}
     end
