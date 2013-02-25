@@ -45,6 +45,7 @@ end
 # Add your after (RE)load hooks here
 #
 Padrino.after_load do
+  require 'will_paginate/mongoid'
 end
 
 Padrino.load!

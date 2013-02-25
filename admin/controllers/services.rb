@@ -35,6 +35,19 @@ Admin.controllers :services do
     end
   end
 
+  get :show, :with => :id do
+    @service = Service.find(params[:id])
+    @service_users = @service.users.paginate(page: params[:page])
+    render 'services/show'
+  end
+
+  put :send_all_notifications, :with => :id do
+    @service = Service.find(params[:id])
+    @service.async_send_notifications_to_users
+    flash[:notice] = "Notifications for #{@service.name} queued for immediate sending."
+    redirect url(:services, :show, :id => @service.id)
+  end
+
   delete :destroy, :with => :id do
     service = Service.find(params[:id])
     if service.destroy

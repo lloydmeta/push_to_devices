@@ -3,6 +3,7 @@ class Admin < Padrino::Application
   register Padrino::Mailer
   register Padrino::Helpers
   register Padrino::Admin::AccessControl
+  register WillPaginate::Sinatra
 
   ##
   # Application configuration options
