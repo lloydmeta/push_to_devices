@@ -1,0 +1,47 @@
+.block
+  .secondary-navigation
+    %ul.wat-cf
+      %li.first=link_to pat(:list), url(:services, :index)
+      %li=link_to pat(:new), url(:services, :new)
+      %li=link_to pat(:edit), url(:services, :edit, :id => @service.id)
+      %li.active=link_to pat(:show), url(:services, :show, :id => @service.id)
+  .content
+    %h2.title
+      =@service.name
+    .inner
+      %table.table
+        %tr
+          %td
+            %strong Server Client Id
+          %td=@service.server_client_id
+        %tr
+          %td
+            %strong Server Client Secret
+          %td=@service.server_client_secret
+        %tr
+          %td
+            %strong Mobile Client Id
+          %td=@service.mobile_client_id
+        %tr
+          %td
+            %strong Mobile Client Secret
+          %td=@service.mobile_client_secret
+      =button_to "Send all notifications", url(:services, :send_all_notifications, :id => @service.id), :method => :put, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
+      %h2
+        Users
+      %table.table
+        %tr
+          %th.first=mat(:user, :unique_hash)
+          %th=mat(:user, :unsent_notifications_count)
+          %th=mat(:user, :has_APN_token)
+          %th=mat(:user, :has_GCM_token)
+          %th.last="&nbsp;"
+        -@service_users.each do |user|
+          %tr
+            %td.first=user.unique_hash
+            %td=user.notifications.count
+            %td=user.apn_device_tokens.count > 0
+            %td=user.gcm_device_tokens.count >0
+      =will_paginate @service_users
+
+-content_for :sidebar, partial("base/sidebar")
