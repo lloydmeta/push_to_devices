@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "UsersController", :type => :controller do
 
   let(:ios_specific_fields){{badge: 5}}
-  let(:android_specific_fields){{google_is_the_best: true}}
+  let(:android_specific_fields){{data: {google_is_the_best: true}, options: {time_to_live: 1000}}}
   let(:notification_data){{ios_specific_fields: ios_specific_fields, android_specific_fields: android_specific_fields}}
 
   before(:each) do
