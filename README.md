@@ -97,9 +97,9 @@ http = Net::HTTP.new(
 # Building the request
 request = Net::HTTP::Post.new("/users", initheader = {'Content-Type' =>'application/json'})
 request.body = {
-  "unique_hash": "user_1_20100305",
-  "apn_device_token": "ghkajdlshg34k48qf", //actual device token, trust me
-  "gcm_registration_id": "asdfdafsfads"
+  "unique_hash" => "user_1_20100305",
+  "apn_device_token" => "ghkajdlshg34k48qf", //actual device token, trust me
+  "gcm_registration_id" => "asdfdafsfads"
 }
 
 # Set headers on the request for authentication
