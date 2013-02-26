@@ -54,8 +54,7 @@ class NotificationsGenerator
     else
       user.notifications.order_by(:created_at.asc).map do |noti|
         android_noti = noti.android_version
-        android_noti_data = android_noti.delete(:data)
-        GCM::Notification.new(user.gcm_device_tokens.map(&:device_id), android_noti_data, android_noti.delete(:options) || {}) unless android_noti_data.nil?
+        GCM::Notification.new(user.gcm_device_tokens.map(&:device_id),  android_noti.delete(:data), android_noti.delete(:options)) unless android_noti.nil?
       end
     end
   end
