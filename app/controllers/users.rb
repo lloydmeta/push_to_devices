@@ -28,21 +28,12 @@ PushToDeviceServer.controllers :users do
 
     error 422, {error: "unique_hash not provided"}.to_json unless data["unique_hash"]
 
-    @service_user = api_current_user.users.where(
-      unique_hash: data["unique_hash"]
-    ).first_or_create!
-
-    if data["apn_device_token"]
-      if @service_user.apn_device_tokens.where(apn_device_token: data["apn_device_token"]).empty?
-        @service_user.apn_device_tokens.build(apn_device_token: data["apn_device_token"]).save!
-      end
-    end
-
-    if data["gcm_registration_id"]
-      if @service_user.gcm_device_tokens.where(gcm_registration_id: data["gcm_registration_id"]).empty?
-        @service_user.gcm_device_tokens.build(gcm_registration_id: data["gcm_registration_id"]).save!
-      end
-    end
+    @service_user = DeviceTokenRegistrar.new(
+      service: api_current_user,
+      unique_hash: data["unique_hash"],
+      apn_device_token: data["apn_device_token"],
+      gcm_registration_id: data["gcm_registration_id"]
+    ).register!
 
     @service_user.to_json
   end
