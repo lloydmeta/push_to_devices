@@ -37,16 +37,30 @@ class DeviceTokenRegistrar
     end
 
     def ensure_apn_token_currently_unused!
-      users_with_token = User.where("apn_device_tokens.apn_device_token" => apn_device_token).all
-      users_with_token.each do |user|
-        user.apn_device_tokens.where("apn_device_token" => apn_device_token).destroy_all
-      end
+      users_with_token = users_holding_token(:apn_device_token)
+      remove_old_token_from_users(users_with_token, :apn_device_token)
     end
 
     def ensure_gcm_id_currently_unused!
-      users_with_token = User.where("gcm_device_tokens.gcm_registration_id" => gcm_registration_id).all
-      users_with_token.each do |user|
-        user.gcm_device_tokens.where("gcm_registration_id" => gcm_registration_id).destroy_all
+      users_with_token = users_holding_token(:gcm_device_token)
+      remove_old_token_from_users(users_with_token, :gcm_device_token)
+    end
+
+    def users_holding_token(token_type)
+      if token_type == :apn_device_token
+        User.where("apn_device_tokens.apn_device_token" => apn_device_token).all
+      elsif token_type == :gcm_device_token
+        User.where("gcm_device_tokens.gcm_registration_id" => gcm_registration_id).all
+      end
+    end
+
+    def remove_old_token_from_users(users, token_type)
+      users.each do |user|
+        if token_type == :apn_device_token
+          user.apn_device_tokens.where("apn_device_token" => apn_device_token).destroy_all
+        elsif token_type == :gcm_device_token
+          user.gcm_device_tokens.where("gcm_registration_id" => gcm_registration_id).destroy_all
+        end
       end
     end
 
