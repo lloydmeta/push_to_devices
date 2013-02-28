@@ -134,10 +134,20 @@ describe "DeviceTokenRegistrar" do
             @old_user.apn_device_tokens.size.should eq(0)
           end
 
+          it "should add the APN token to the newly registered user" do
+            user = @device_token_registrar_apn_2.register!
+            user.apn_device_tokens.first.device_id.should eq(@apn_token)
+          end
+
           it "should remove the GCM token from the old user who used to hold it" do
             @device_token_registrar_gcm_2.register!
             @old_user.reload
             @old_user.gcm_device_tokens.size.should eq(0)
+          end
+
+          it "should add the GCM token to the newly registered user" do
+            user = @device_token_registrar_gcm_2.register!
+            user.gcm_device_tokens.first.device_id.should eq(@gcm_registration_id)
           end
 
         end
