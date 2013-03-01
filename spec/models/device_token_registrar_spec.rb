@@ -97,7 +97,7 @@ describe "DeviceTokenRegistrar" do
           user.gcm_device_tokens.size.should eq(1)
         end
 
-        it "should create an gcm token on the user properly if provided with one" do
+        it "should create an APN token and gcm token on the user properly if provided with both" do
           user = @device_token_registrar_apn_gcm.register!
           user.apn_device_tokens.first.device_id.should eq(@apn_token)
           user.gcm_device_tokens.first.device_id.should eq(@gcm_registration_id)
@@ -150,6 +150,45 @@ describe "DeviceTokenRegistrar" do
             user.gcm_device_tokens.first.device_id.should eq(@gcm_registration_id)
           end
 
+        end
+
+      end
+
+      context "and old user_hash" do
+
+        before(:each) do
+          @apn_token = "apntokentoken"
+          @apn_token_new = "apntokentoken2"
+          @gcm_registration_id = "gcmidid"
+          @gcm_registration_id_new = "gcmidid2"
+          @device_token_registrar_apn = DeviceTokenRegistrar.new(service: @service, unique_hash: "hashhash", apn_device_token: @apn_token)
+          @device_token_registrar_gcm = DeviceTokenRegistrar.new(service: @service, unique_hash: "hashhash", gcm_registration_id: @gcm_registration_id)
+          @device_token_registrar_apn_new = DeviceTokenRegistrar.new(service: @service, unique_hash: "hashhash", apn_device_token: @apn_token_new)
+          @device_token_registrar_gcm_new = DeviceTokenRegistrar.new(service: @service, unique_hash: "hashhash", gcm_registration_id: @gcm_registration_id_new)
+        end
+
+        it "should add an APN token on the user if there is already an APN token on the user and the new token doesnt match" do
+          @device_token_registrar_apn.register!
+          user = @device_token_registrar_apn_new.register!
+          user.apn_device_tokens.size.should eq(2)
+        end
+
+        it "should add an APN token on the user properly if there is already an APN token on the user and the new token doesnt match" do
+          @device_token_registrar_apn.register!
+          user = @device_token_registrar_apn_new.register!
+          user.apn_device_tokens.last.device_id.should eq(@apn_token_new)
+        end
+
+        it "should add an GCM token on the user if there is already an GCM token on the user and the new token doesnt match" do
+          @device_token_registrar_gcm.register!
+          user = @device_token_registrar_gcm_new.register!
+          user.gcm_device_tokens.size.should eq(2)
+        end
+
+        it "should add an GCM token on the user properly if there is already an GCM token on the user and the new token doesnt match" do
+          @device_token_registrar_gcm.register!
+          user = @device_token_registrar_gcm_new.register!
+          user.gcm_device_tokens.last.device_id.should eq(@gcm_registration_id_new)
         end
 
       end
