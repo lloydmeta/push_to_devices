@@ -49,7 +49,7 @@ PushToDeviceServer.controllers :users do
     begin
       data=JSON.parse(request.body.read.to_s)
     rescue
-      halt 422, {error: "invalid json"}
+      halt 422, {error: "invalid json"}.to_json
     end
 
     halt 422, {error: "unique_hash not provided"}.to_json unless params[:unique_hash]
@@ -82,7 +82,7 @@ PushToDeviceServer.controllers :users do
     begin
       data=JSON.parse(request.body.read.to_s)
     rescue
-      halt 422, {error: "invalid json"}
+      halt 422, {error: "invalid json"}.to_json
     end
 
     halt 422, {error: "unique_hashes not provided"}.to_json unless data["unique_hashes"]
