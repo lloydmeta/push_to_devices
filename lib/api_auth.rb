@@ -60,7 +60,7 @@ module ApiAuth
     def api_deny_access(message="api-auth-err-authentication-failed")
       Padrino::logger.info "API Auth failed: #{message}"
       content_type :json
-      error 403, {error: message}.to_json
+      halt 403,  {error: message}.to_json
     end
 
     def api_signed_in?

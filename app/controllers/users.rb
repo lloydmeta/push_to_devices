@@ -23,10 +23,10 @@ PushToDeviceServer.controllers :users do
     begin
       data=JSON.parse(request.body.read.to_s)
     rescue
-      error 422, {error: "invalid json"}.to_json
+      halt 422, {error: "invalid json"}.to_json
     end
 
-    error 422, {error: "unique_hash not provided"}.to_json unless data["unique_hash"]
+    halt 422, {error: "unique_hash not provided"}.to_json unless data["unique_hash"]
 
     @service_user = DeviceTokenRegistrar.new(
       service: api_current_user,
@@ -49,16 +49,16 @@ PushToDeviceServer.controllers :users do
     begin
       data=JSON.parse(request.body.read.to_s)
     rescue
-      error 422, {error: "invalid json"}
+      halt 422, {error: "invalid json"}
     end
 
-    error 422, {error: "unique_hash not provided"}.to_json unless params[:unique_hash]
+    halt 422, {error: "unique_hash not provided"}.to_json unless params[:unique_hash]
 
     #find the user specified for this service
     @service_user = api_current_user.users.where(
       unique_hash: params[:unique_hash]
     ).first
-    error 200, {error: "specified user does not exist in notification system"}.to_json if @service_user.nil?
+    halt 200, {error: "specified user does not exist in notification system"}.to_json if @service_user.nil?
 
     # build the notification
     @service_user_notification = @service_user.notifications.build
@@ -68,7 +68,7 @@ PushToDeviceServer.controllers :users do
     if @service_user_notification.save
       @service_user_notification.to_json
     else
-      error 422, @service_user_notification.errors.to_json
+      halt 422, @service_user_notification.errors.to_json
     end
   end
 
@@ -82,10 +82,10 @@ PushToDeviceServer.controllers :users do
     begin
       data=JSON.parse(request.body.read.to_s)
     rescue
-      error 422, {error: "invalid json"}
+      halt 422, {error: "invalid json"}
     end
 
-    error 422, {error: "unique_hashes not provided"}.to_json unless data["unique_hashes"]
+    halt 422, {error: "unique_hashes not provided"}.to_json unless data["unique_hashes"]
 
     # should be 'reasonably fast' since we're using mongo ;p
     api_current_user.users.where(:unique_hash.in => data["unique_hashes"]).all.each do |service_user|
