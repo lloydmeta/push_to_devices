@@ -46,12 +46,18 @@ class PushToDeviceServer < Padrino::Application
   ##
   # You can manage errors like:
   #
-  #   error 404 do
-  #     render 'errors/404'
-  #   end
-  #
-  #   error 505 do
-  #     render 'errors/505'
-  #   end
-  #
+    error 404 do
+      content_type :json
+      status 400
+      e = env['sinatra.error']
+      {:error => e.message}.to_json
+    end
+
+    error do
+      content_type :json
+      status 500
+      e = env['sinatra.error']
+      {:error => e.message}.to_json
+    end
+
 end
