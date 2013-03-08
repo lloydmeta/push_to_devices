@@ -1,4 +1,4 @@
-Push to Device [![Build Status](https://secure.travis-ci.org/lloydmeta/push_to_devices.png)](http://travis-ci.org/lloydmeta/push_to_devices) [![Code Climate](https://codeclimate.com/github/lloydmeta/push_to_devices.png)](https://codeclimate.com/github/lloydmeta/push_to_devices)
+Push to Devices [![Build Status](https://secure.travis-ci.org/lloydmeta/push_to_devices.png)](http://travis-ci.org/lloydmeta/push_to_devices) [![Code Climate](https://codeclimate.com/github/lloydmeta/push_to_devices.png)](https://codeclimate.com/github/lloydmeta/push_to_devices)
 ------------
 
 A REST-ful Padrino-based server for you to send push notifications to iOS and Android devices. There is a Ruby client library/gem [as well](https://github.com/lloydmeta/push_to_devices_rb).
