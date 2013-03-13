@@ -43,7 +43,9 @@ describe "Service Model" do
   end
 
   context "#delete_user_apn_tokens_based_on_apple_feedback" do
+
     before(:each) do
+
       @service = FactoryGirl.create(:service)
       @service_user_unique_hash_1 = "asdf1234"
       @service_user_unique_hash_2 = "asdf12343"
@@ -60,20 +62,50 @@ describe "Service Model" do
       @token_1.save!
       @token_2.save!
       @token_3.save!
+
+      @service.stub(:get_pushmeup_apn_feedback){
+        [
+          {token: @user_1_apn_token, timestamp: 1.day.ago},
+          {token: @user_2_apn_token, timestamp: Time.now},
+          {token: @user_3_apn_token, timestamp: 10.seconds.from_now}
+        ]
+      }
+
     end
 
-    it "should delete the tokens reported as borked by Apple feedback" do
-      @service.stub(:get_apn_feedback){[{token: @user_1_apn_token}, {token: @user_2_apn_token}, {token: @user_3_apn_token}]}
+    it "should not immediately delete user tokens" do
       @service.delete_user_apn_tokens_based_on_apple_feedback
       @service_user_1.reload
       @service_user_2.reload
       @service_user_3.reload
-      @service_user_1.apn_device_tokens.should be_empty
+      @service_user_1.apn_device_tokens.should_not be_empty
+      @service_user_2.apn_device_tokens.should_not be_empty
+      @service_user_3.apn_device_tokens.should_not be_empty
+    end
+
+    it "should not increment feedback_fail_count on tokens that were reported as failed before their created_at" do
+      @service.delete_user_apn_tokens_based_on_apple_feedback
+      @service_user_1.reload
+      @service_user_2.reload
+      @service_user_3.reload
+      @service_user_1.apn_device_tokens.first.feedback_fail_count.should eq(0)
+      @service_user_2.apn_device_tokens.first.feedback_fail_count.should eq(1)
+      @service_user_3.apn_device_tokens.first.feedback_fail_count.should eq(1)
+    end
+
+    it "delete APN tokens that were reported borked #{ApnDeviceToken::FEEDBACK_FAIL_COUNT_THRESHOLD} times" do
+      ApnDeviceToken::FEEDBACK_FAIL_COUNT_THRESHOLD.times do
+        @service.delete_user_apn_tokens_based_on_apple_feedback
+      end
+      @service_user_1.reload
+      @service_user_2.reload
+      @service_user_3.reload
+      @service_user_1.apn_device_tokens.first.should_not be_nil
       @service_user_2.apn_device_tokens.should be_empty
       @service_user_3.apn_device_tokens.should be_empty
     end
-  end
 
+  end
 
   context "sending notifications" do
 

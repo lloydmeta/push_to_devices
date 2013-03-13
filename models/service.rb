@@ -81,30 +81,10 @@ class Service
   end
 
   def delete_user_apn_tokens_based_on_apple_feedback
-    invalid_tokens = get_apn_feedback.map{|f|f[:token]}
-    users.all.each do |u|
-      u.apn_device_tokens.where(:apn_device_token.in => invalid_tokens).delete_all
-    end
-  end
-
-  def apn_connection
-    @apn_connection ||= begin
-      connection = APNS.clone
-      connection.host = apn_host if apn_host && !apn_host.empty?
-      connection.port = apn_port if apn_port
-      connection.pem = apn_pem_path
-      connection.pass = apn_pem_password if apn_pem_password && !apn_pem_password.empty?
-      connection
-    end
-  end
-
-  def gcm_connection
-    #stub
-    @gcm_connection ||= begin
-      connection = GCM.clone
-      connection.host = gcm_host if gcm_host && !gcm_host.empty?
-      connection.key = gcm_api_key
-      connection
+    apple_feedback = get_apn_feedback
+    users.all.each do |user|
+      mark_invalid_apn_device_tokens(user, apple_feedback)
+      destroy_apn_device_tokens_with_fails_above_threshold(user)
     end
   end
 
@@ -120,12 +100,58 @@ class Service
     apn_connection.send_notifications(notifications) unless notifications.nil? || notifications.empty?
   end
 
-  def get_apn_feedback
-    apn_connection.feedback
-  end
-
   def send_gcm_notifications(notifications)
     gcm_connection.send_notifications(notifications) unless notifications.nil? || notifications.empty?
   end
+
+  private
+
+    def apn_connection
+      @apn_connection ||= begin
+        connection = APNS.clone
+        connection.host = apn_host if apn_host && !apn_host.empty?
+        connection.port = apn_port if apn_port
+        connection.pem = apn_pem_path
+        connection.pass = apn_pem_password if apn_pem_password && !apn_pem_password.empty?
+        connection
+      end
+    end
+
+    def gcm_connection
+      @gcm_connection ||= begin
+        connection = GCM.clone
+        connection.host = gcm_host if gcm_host && !gcm_host.empty?
+        connection.key = gcm_api_key
+        connection
+      end
+    end
+
+    # Returns a hash of APN device id => timestamp_at_which_it_failed
+    # NOTE: this uses an external resource
+    # Always memoize or save in a variable because once .feedback is called
+    # the data is cleared on Apple's side
+    def get_apn_feedback
+      apple_feedback = get_pushmeup_apn_feedback.sort_by{|f| f[:timestamp]}
+      apple_feedback.reduce({}){|feedback_hash, array_value|
+            feedback_hash.merge({array_value[:token] => array_value[:timestamp]})
+      }
+    end
+
+    # Wrap the method on the PushMeUp gem to be safe
+    def get_pushmeup_apn_feedback
+      apn_connection.feedback
+    end
+
+    def mark_invalid_apn_device_tokens(user, apple_feedback_hash)
+      apple_feedback_hash.each do |invalid_token, failed_at_timestamp|
+        user.apn_device_tokens.where(apn_device_token: invalid_token).where(:created_at.lt => failed_at_timestamp).each do |apn_device_token|
+          apn_device_token.increment_feedback_fail_count
+        end
+      end
+    end
+
+    def destroy_apn_device_tokens_with_fails_above_threshold(user)
+      user.apn_device_tokens.where(:feedback_fail_count.gte => ApnDeviceToken::FEEDBACK_FAIL_COUNT_THRESHOLD).destroy_all
+    end
 
 end
