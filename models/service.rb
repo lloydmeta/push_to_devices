@@ -127,6 +127,7 @@ class Service
     end
 
     # Returns a hash of APN device id => timestamp_at_which_it_failed
+    # NOTE: this uses an external resource
     # Always memoize or save in a variable because once .feedback is called
     # the data is cleared on Apple's side
     def get_apn_feedback
@@ -136,6 +137,7 @@ class Service
       }
     end
 
+    # Wrap the method on the PushMeUp gem to be safe
     def get_pushmeup_apn_feedback
       apn_connection.feedback
     end
