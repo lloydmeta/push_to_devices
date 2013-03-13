@@ -48,9 +48,9 @@ class DeviceTokenRegistrar
 
     def users_holding_token(token_type)
       if token_type == :apn_device_token
-        User.where("apn_device_tokens.apn_device_token" => apn_device_token).all
+        service.users.where("apn_device_tokens.apn_device_token" => apn_device_token).all
       elsif token_type == :gcm_device_token
-        User.where("gcm_device_tokens.gcm_registration_id" => gcm_registration_id).all
+        service.users.where("gcm_device_tokens.gcm_registration_id" => gcm_registration_id).all
       end
     end
 
