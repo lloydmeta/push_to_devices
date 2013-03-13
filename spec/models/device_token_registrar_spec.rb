@@ -167,6 +167,17 @@ describe "DeviceTokenRegistrar" do
           @device_token_registrar_gcm_new = DeviceTokenRegistrar.new(service: @service, unique_hash: "hashhash", gcm_registration_id: @gcm_registration_id_new)
         end
 
+        context "but different service" do
+
+          it "should create users with the same token without any issues" do
+            device_token_registrar_apn_same_token_different_service = DeviceTokenRegistrar.new(service: FactoryGirl.create(:service), unique_hash: "hashhash", apn_device_token: @apn_token)
+            user_service_1 = @device_token_registrar_apn.register!
+            user_service_2 = device_token_registrar_apn_same_token_different_service.register!
+            user_service_1.apn_device_tokens.first.device_id.should eq(user_service_2.apn_device_tokens.first.device_id)
+          end
+
+        end
+
         it "should add an APN token on the user if there is already an APN token on the user and the new token doesnt match" do
           @device_token_registrar_apn.register!
           user = @device_token_registrar_apn_new.register!
