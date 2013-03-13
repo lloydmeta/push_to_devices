@@ -131,7 +131,7 @@ class Service
     # Always memoize or save in a variable because once .feedback is called
     # the data is cleared on Apple's side
     def get_apn_feedback
-      apple_feedback = get_pushmeup_apn_feedback
+      apple_feedback = get_pushmeup_apn_feedback.sort_by{|f| f[:timestamp]}
       apple_feedback.reduce({}){|feedback_hash, array_value|
             feedback_hash.merge({array_value[:token] => array_value[:timestamp]})
       }
