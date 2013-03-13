@@ -2,6 +2,8 @@
 
 class ApnDeviceToken < DeviceToken
 
+  FEEDBACK_FAIL_COUNT_THRESHOLD  = 3
+
   # field <name>, :type => <type>, :default => <value>
   field :apn_device_token, :type => String
   field :feedback_fail_count, :type => Integer, :default => 0

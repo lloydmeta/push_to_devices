@@ -81,9 +81,10 @@ class Service
   end
 
   def delete_user_apn_tokens_based_on_apple_feedback
-    invalid_tokens = get_apn_feedback.map{|f|f[:token]}
-    users.all.each do |u|
-      u.apn_device_tokens.where(:apn_device_token.in => invalid_tokens).delete_all
+    apple_feedback = get_apn_feedback
+    users.all.each do |user|
+      mark_invalid_apn_device_tokens(user, apple_feedback)
+      destroy_apn_device_tokens_with_fails_above_threshold(user)
     end
   end
 
@@ -125,8 +126,30 @@ class Service
       end
     end
 
+    # Returns a hash of APN device id => timestamp_at_which_it_failed
+    # Always memoize or save in a variable because once .feedback is called
+    # the data is cleared on Apple's side
     def get_apn_feedback
+      apple_feedback = get_pushmeup_apn_feedback
+      apple_feedback.reduce({}){|feedback_hash, array_value|
+            feedback_hash.merge({array_value[:token] => array_value[:timestamp]})
+      }
+    end
+
+    def get_pushmeup_apn_feedback
       apn_connection.feedback
+    end
+
+    def mark_invalid_apn_device_tokens(user, apple_feedback_hash)
+      apple_feedback_hash.each do |invalid_token, failed_at_timestamp|
+        user.apn_device_tokens.where(apn_device_token: invalid_token).where(:created_at.lt => failed_at_timestamp).each do |apn_device_token|
+          apn_device_token.increment_feedback_fail_count
+        end
+      end
+    end
+
+    def destroy_apn_device_tokens_with_fails_above_threshold(user)
+      user.apn_device_tokens.where(:feedback_fail_count.gte => ApnDeviceToken::FEEDBACK_FAIL_COUNT_THRESHOLD).destroy_all
     end
 
 end
