@@ -87,27 +87,6 @@ class Service
     end
   end
 
-  def apn_connection
-    @apn_connection ||= begin
-      connection = APNS.clone
-      connection.host = apn_host if apn_host && !apn_host.empty?
-      connection.port = apn_port if apn_port
-      connection.pem = apn_pem_path
-      connection.pass = apn_pem_password if apn_pem_password && !apn_pem_password.empty?
-      connection
-    end
-  end
-
-  def gcm_connection
-    #stub
-    @gcm_connection ||= begin
-      connection = GCM.clone
-      connection.host = gcm_host if gcm_host && !gcm_host.empty?
-      connection.key = gcm_api_key
-      connection
-    end
-  end
-
   def has_pemfile?
     pemfile.present?
   end
@@ -120,12 +99,34 @@ class Service
     apn_connection.send_notifications(notifications) unless notifications.nil? || notifications.empty?
   end
 
-  def get_apn_feedback
-    apn_connection.feedback
-  end
-
   def send_gcm_notifications(notifications)
     gcm_connection.send_notifications(notifications) unless notifications.nil? || notifications.empty?
   end
+
+  private
+
+    def apn_connection
+      @apn_connection ||= begin
+        connection = APNS.clone
+        connection.host = apn_host if apn_host && !apn_host.empty?
+        connection.port = apn_port if apn_port
+        connection.pem = apn_pem_path
+        connection.pass = apn_pem_password if apn_pem_password && !apn_pem_password.empty?
+        connection
+      end
+    end
+
+    def gcm_connection
+      @gcm_connection ||= begin
+        connection = GCM.clone
+        connection.host = gcm_host if gcm_host && !gcm_host.empty?
+        connection.key = gcm_api_key
+        connection
+      end
+    end
+
+    def get_apn_feedback
+      apn_connection.feedback
+    end
 
 end
