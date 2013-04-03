@@ -35,7 +35,7 @@ class NotificationsGenerator
       nil
     else
       user.notifications.order_by(:created_at.asc).map do |noti|
-        user.apn_device_tokens.reduce([]){|ios_notis, apn_device_token|
+        user.apn_device_tokens.map{|apn_device_token|
           APNS::Notification.new(apn_device_token.device_id, noti.ios_version)
         }
       end
