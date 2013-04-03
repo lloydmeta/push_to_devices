@@ -21,6 +21,15 @@ describe "NotificationsGenerator" do
       user.apn_device_tokens.build(apn_device_token: "hahahdasdf").save!
       user.notifications.build(message: default_message, ios_specific_fields: ios_specific_fields, android_specific_fields: android_specific_fields).save!
       user
+    end +
+
+    # users with multiple apn device tokens
+    10.times.map do
+      user = FactoryGirl.create(:user)
+      user.apn_device_tokens.build(apn_device_token: "hahahdasdf").save!
+      user.apn_device_tokens.build(apn_device_token: "asdfafasf").save!
+      user.notifications.build(message: default_message, ios_specific_fields: ios_specific_fields, android_specific_fields: android_specific_fields).save!
+      user
     end
   }
 
