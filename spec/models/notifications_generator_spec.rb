@@ -21,6 +21,16 @@ describe "NotificationsGenerator" do
       user.apn_device_tokens.build(apn_device_token: "hahahdasdf").save!
       user.notifications.build(message: default_message, ios_specific_fields: ios_specific_fields, android_specific_fields: android_specific_fields).save!
       user
+    end +
+
+    # users with multiple apn device tokens
+    10.times.map do
+      user = FactoryGirl.create(:user)
+      user.apn_device_tokens.build(apn_device_token: "hahahdaasdfasfsdf").save!
+      user.apn_device_tokens.build(apn_device_token: "da25tasdgt3").save!
+      user.apn_device_tokens.build(apn_device_token: "asdfafasf").save!
+      user.notifications.build(message: default_message, ios_specific_fields: ios_specific_fields, android_specific_fields: android_specific_fields).save!
+      user
     end
   }
 
@@ -76,6 +86,10 @@ describe "NotificationsGenerator" do
 
         it "should return an array" do
           @notifications_generator.notifications(:ios).should be_a(Array)
+        end
+
+        it "should return an array with the proper number of notifications taking into account notifications AND tokens per user" do
+          @notifications_generator.notifications(:ios).size.should eq(40)
         end
 
         it "should return an array with APN::notifications" do
