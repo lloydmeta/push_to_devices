@@ -88,6 +88,10 @@ describe "NotificationsGenerator" do
           @notifications_generator.notifications(:ios).should be_a(Array)
         end
 
+        it "should return an array with the proper number of notifications taking into account notifications AND tokens per user" do
+          @notifications_generator.notifications(:ios).size.should eq(40)
+        end
+
         it "should return an array with APN::notifications" do
           @notifications_generator.notifications(:ios).each do |e|
             e.should be_a(APNS::Notification)
