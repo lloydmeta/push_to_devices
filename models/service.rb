@@ -62,6 +62,21 @@ class Service
     end
   end
 
+  def async_clear_users_notifications!
+    if Padrino.env == :test
+      clear_users_notifications!
+    else
+      Queue::High.enqueue(self, :clear_users_notifications!)
+    end
+  end
+
+  def clear_users_notifications!
+    batch_iterate_users_with_notifications do |users_batch|
+      notifications_generator = NotificationsGenerator.new(users: users_batch)
+      notifications_generator.clear_users_notifications!
+    end
+  end
+
   # Method for iteration of users with notifications. Takes a block
   # And passes back the entire batch of users one at at time
   def batch_iterate_users_with_notifications(batch_size = 1000)
