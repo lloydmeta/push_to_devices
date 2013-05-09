@@ -48,6 +48,13 @@ Admin.controllers :services do
     redirect url(:services, :show, :id => @service.id)
   end
 
+  put :clear_users_notifications, :with => :id do
+    @service = Service.find(params[:id])
+    @service.async_clear_users_notifications!
+    flash[:notice] = "Notifications for #{@service.name} queued for immediate clearing."
+    redirect url(:services, :show, :id => @service.id)
+  end
+
   delete :destroy, :with => :id do
     service = Service.find(params[:id])
     if service.destroy

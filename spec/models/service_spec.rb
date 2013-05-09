@@ -42,6 +42,15 @@ describe "Service Model" do
 
   end
 
+  describe "#clear_users_notifications!" do
+
+    it "should call #clear_users_notifications! " do
+      NotificationsGenerator.any_instance.should_receive(:clear_users_notifications!)
+      service.clear_users_notifications!
+    end
+
+  end
+
   context "#delete_user_apn_tokens_based_on_apple_feedback" do
 
     before(:each) do

@@ -26,7 +26,7 @@ class Notification
   # key :field <, :another_field, :one_more ....>
 
   def ios_version
-    if ! ios_specific_fields.empty?
+    if ios_specific_fields && ! ios_specific_fields.empty?
       DEFAULT_NOTIFICATION_IOS.merge(JSON.parse(ios_specific_fields).symbolize_keys)
     else
       {}
@@ -34,7 +34,7 @@ class Notification
   end
 
   def android_version
-    if ! android_specific_fields.empty?
+    if android_specific_fields && ! android_specific_fields.empty?
       android_notification = JSON.parse(android_specific_fields).symbolize_keys
       DEFAULT_NOTIFICATION_DATA_ANDROID.merge(DEFAULT_NOTIFICATION_OPTIONS_ANDROID).merge(android_notification)
     else
