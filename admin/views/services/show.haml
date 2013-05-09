@@ -26,7 +26,12 @@
           %td
             %strong Mobile Client Secret
           %td=@service.mobile_client_secret
-      =button_to "Send all notifications", url(:services, :send_all_notifications, :id => @service.id), :method => :put, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
+        %tr
+          %td
+            =button_to "Send all notifications", url(:services, :send_all_notifications, :id => @service.id), :method => :put, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
+        %tr
+          %td
+            =button_to "Clear notifications", url(:services, :clear_users_notifications, :id => @service.id), :method => :put, :class => :button_to, :onsubmit => "return confirm('#{pat(:confirm)}')"
       %h2
         Users
       %table.table
