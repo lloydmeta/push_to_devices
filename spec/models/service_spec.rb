@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "Service Model" do
-  let(:service) { Service.new }
+  let(:service) { FactoryGirl.create(:service) }
 
   it 'can be created' do
     service.should_not be_nil
@@ -29,14 +29,8 @@ describe "Service Model" do
 
   describe "#send_notifications_to_users" do
 
-    it "should call #notifications with (:ios) and (:android) on a NotificationsGenerator instance" do
-      NotificationsGenerator.any_instance.should_receive(:notifications).with(:ios)
-      NotificationsGenerator.any_instance.should_receive(:notifications).with(:android)
-      service.send_notifications_to_users
-    end
-
-    it "should call #clear_users_notifications! " do
-      NotificationsGenerator.any_instance.should_receive(:clear_users_notifications!)
+    it "should call #notifications with (:ios) and (:android) on a NotificationsBufferedSender instance" do
+      NotificationsBufferedSender.any_instance.should_receive(:send!)
       service.send_notifications_to_users
     end
 
@@ -112,41 +106,6 @@ describe "Service Model" do
       @service_user_1.apn_device_tokens.first.should_not be_nil
       @service_user_2.apn_device_tokens.should be_empty
       @service_user_3.apn_device_tokens.should be_empty
-    end
-
-  end
-
-  context "sending notifications" do
-
-    before(:each) do
-      @service = FactoryGirl.create(:service)
-    end
-
-    # Commented out for now because I keep getting SSL errors..
-    # Need to figure out how to disable or fix it
-
-    # describe "#send_apn_notifications" do
-
-    #   it "should make requests to a specific address" do
-    #     notifications = 10.times.map do
-    #       APNS::Notification.new("1234", {test: "lol"})
-    #     end
-
-    #     @service.send_apn_notifications(notifications)
-    #     a_request(:any, "fake_apn.com").should have_been_made
-    #   end
-    # end
-
-    describe "#send_gcm_notifications" do
-
-      it "should make requests to a specific address" do
-        notifications = 10.times.map do
-          GCM::Notification.new("1234", {test: "lol"})
-        end
-
-        @service.send_gcm_notifications(notifications)
-        a_request(:any, "https://fake.google.com/fakegcm/send").should have_been_made.times(10)
-      end
     end
 
   end

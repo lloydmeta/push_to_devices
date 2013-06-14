@@ -46,18 +46,17 @@ class Service
   end
 
   def send_notifications_to_users
-    batch_iterate_users_with_notifications(batch_size: 100) do |users_batch|
-      notifications_generator = NotificationsGenerator.new(users: users_batch)
-      ios_notifications = notifications_generator.notifications(:ios)
-      android_notifications = notifications_generator.notifications(:android)
+    batch_iterate_users_with_notifications(batch_size: 1000) do |users_batch|
+      notifications_buffered_sender = NotificationsBufferedSender.new(
+        users: users_batch,
+        apn_connection: apn_connection,
+        gcm_connection: gcm_connection
+      )
       begin
-        send_apn_notifications(ios_notifications)
-        send_gcm_notifications(android_notifications)
+        notifications_buffered_sender.send!
       rescue => e
         Padrino::logger.info e
         Padrino::logger.info e.backtrace
-      ensure
-        notifications_generator.clear_users_notifications!
       end
     end
   end
@@ -71,7 +70,7 @@ class Service
   end
 
   def clear_users_notifications!
-    batch_iterate_users_with_notifications(batch_size: 100) do |users_batch|
+    batch_iterate_users_with_notifications(batch_size: 1000) do |users_batch|
       notifications_generator = NotificationsGenerator.new(users: users_batch)
       notifications_generator.clear_users_notifications!
     end
@@ -109,14 +108,6 @@ class Service
 
   def apn_pem_path
     pemfile.current_path.gsub("/public/uploads", "/uploads")
-  end
-
-  def send_apn_notifications(notifications)
-    apn_connection.send_notifications(notifications) unless notifications.nil? || notifications.empty?
-  end
-
-  def send_gcm_notifications(notifications)
-    gcm_connection.send_notifications(notifications) unless notifications.nil? || notifications.empty?
   end
 
   private

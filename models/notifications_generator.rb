@@ -11,7 +11,7 @@ class NotificationsGenerator
 
   def initialize(params)
     initialisation_params = DEFAULT_PARAMS.merge(params)
-    @users = initialisation_params[:users]
+    self.users = initialisation_params[:users]
   end
 
   def notifications(type = :ios)
@@ -25,7 +25,7 @@ class NotificationsGenerator
   end
 
   def ios_notifications_for_users
-    @users.map {|user|
+    users.map {|user|
       ios_notifications_for_user(user)
     }.flatten.compact
   end
@@ -43,7 +43,7 @@ class NotificationsGenerator
   end
 
   def android_notifications_for_users
-    @users.map {|user|
+    users.map {|user|
       android_notifications_for_user(user)
     }.flatten.compact
   end
@@ -60,7 +60,7 @@ class NotificationsGenerator
   end
 
   def clear_users_notifications!
-    @users.each do |user|
+    users.each do |user|
       user.notifications.destroy_all
     end
   end
