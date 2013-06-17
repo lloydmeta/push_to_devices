@@ -106,7 +106,7 @@ describe "Notification Model" do
           user = FactoryGirl.create(:user_with_gcm_token)
           notification = FactoryGirl.create(:notification, user: user)
 
-          notification.sendable(:android).device_tokens.should eq sendable_gcm(notification).device_tokens
+          notification.sendable(:android).should eq sendable_gcm(notification)
         end
 
         it "should return a sendable notification with as many GCM tokens in it as the notificaiton's user has GCM tokens" do
@@ -114,7 +114,7 @@ describe "Notification Model" do
           FactoryGirl.create(:gcm_device_token, user: user)
           notification = FactoryGirl.create(:notification, user: user)
 
-          notification.sendable(:android).device_tokens.should eq sendable_gcm(notification).device_tokens
+          notification.sendable(:android).should eq sendable_gcm(notification)
         end
 
       end

@@ -84,14 +84,48 @@ describe "NotificationsBufferedSender" do
         )
       end
 
-      it "should call #send_notifications on apn_connection" do
-        apn_connection.should_receive(:send_notifications).exactly(@notifications.size / NotificationsBufferedSender::NOTIFICATIONS_BUFFER_THRESHOLD).times
-        @notifications_buffered_sender.send!
-      end
+      context "accounting" do
 
-      it "should call #send_notifications on gcm_connection" do
-        gcm_connection.should_receive(:send_notifications).exactly(@notifications.size / NotificationsBufferedSender::NOTIFICATIONS_BUFFER_THRESHOLD).times
-        @notifications_buffered_sender.send!
+        context "on apn_connection calls" do
+
+          it "should call #send_notifications on apn_connection the proper number of times" do
+            apn_connection.should_receive(:send_notifications).exactly(@notifications.size / NotificationsBufferedSender::NOTIFICATIONS_BUFFER_THRESHOLD).times
+            @notifications_buffered_sender.send!
+          end
+
+          it "should send the right notifications to #send_notifications (only once, no repeates, all should be sent)" do
+            notifcations_grouped = @notifications.each_slice(NotificationsBufferedSender::NOTIFICATIONS_BUFFER_THRESHOLD)
+            sendable_notifications_grouped = notifcations_grouped.map{|n_group|
+              n_group.map{|n| n.sendable(:ios)}.flatten
+            }
+            sendable_notifications_grouped.each do |send_notifications_group|
+              apn_connection.should_receive(:send_notifications).with(send_notifications_group)
+            end
+            @notifications_buffered_sender.send!
+          end
+
+        end
+
+        context "on gcm_connection calls" do
+
+          it "should call #send_notifications on gcm_connection the proper number of times" do
+            gcm_connection.should_receive(:send_notifications).exactly(@notifications.size / NotificationsBufferedSender::NOTIFICATIONS_BUFFER_THRESHOLD).times
+            @notifications_buffered_sender.send!
+          end
+
+          it "should send the right notifications to #send_notifications (only once, no repeates, all should be sent)" do
+            notifcations_grouped = @notifications.each_slice(NotificationsBufferedSender::NOTIFICATIONS_BUFFER_THRESHOLD)
+            sendable_notifications_grouped = notifcations_grouped.map{|n_group|
+              n_group.map{|n| n.sendable(:android)}.flatten
+            }
+            sendable_notifications_grouped.each do |send_notifications_group|
+              gcm_connection.should_receive(:send_notifications).with(send_notifications_group)
+            end
+            @notifications_buffered_sender.send!
+          end
+
+        end
+
       end
 
       it "should clear all notifications for users" do
