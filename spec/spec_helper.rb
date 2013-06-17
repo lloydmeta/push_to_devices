@@ -47,3 +47,32 @@ def app
   #   Padrino.application
   PushToDeviceServer.tap { |app|  }
 end
+
+# equality overrides for notifications
+module APNS
+  class Notification
+
+    def ==(that)
+      device_token == that.device_token &&
+      alert == that.alert &&
+      badge == that.badge &&
+      sound == that.sound &&
+      other == that.other
+    end
+  end
+end
+
+module GCM
+  class Notification
+
+    def ==(that)
+      device_tokens == that.device_tokens &&
+      data == that.data &&
+      collapse_key == that.collapse_key &&
+      time_to_live == that.time_to_live &&
+      delay_while_idle == that.delay_while_idle &&
+      identity == that.identity
+    end
+  end
+end
+
