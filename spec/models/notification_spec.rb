@@ -65,6 +65,62 @@ describe "Notification Model" do
 
     end
 
+    describe "#sendable" do
+
+      context "with/without APN token(s)" do
+
+        it "should return an empty array for a user with no APN tokens" do
+          notification = FactoryGirl.create(:notification)
+          notification.sendable(:ios).should be_empty
+        end
+
+        it "should return 1 sendable notification for a notification with a user that only has 1 APN token" do
+          user = FactoryGirl.create(:user_with_apn_token)
+          notification = FactoryGirl.create(:notification, user: user)
+          notification.sendable(:ios).size.should be 1
+        end
+
+        it "should return as many sendable notifications as the notification's user has APN tokens" do
+          user = FactoryGirl.create(:user_with_apn_token)
+          FactoryGirl.create(:apn_device_token, user: user)
+          notification = FactoryGirl.create(:notification, user: user)
+          notification.sendable(:ios).size.should be 2
+        end
+
+      end
+
+      context "with/without GCM token(s)" do
+
+        def sendable_gcm(notification)
+          user = notification.user
+          android_noti = notification.android_version
+          GCM::Notification.new(user.gcm_device_tokens.map(&:device_id),  android_noti.delete(:data), android_noti.delete(:options))
+        end
+
+        it "should return nil for a user with no GCM tokens" do
+          notification = FactoryGirl.create(:notification)
+          notification.sendable(:android).should be_nil
+        end
+
+        it "should return a sendable notification with 1 GCM token in it for a notification with a user who only has 1 GCM token" do
+          user = FactoryGirl.create(:user_with_gcm_token)
+          notification = FactoryGirl.create(:notification, user: user)
+
+          notification.sendable(:android).device_tokens.should eq sendable_gcm(notification).device_tokens
+        end
+
+        it "should return a sendable notification with as many GCM tokens in it as the notificaiton's user has GCM tokens" do
+          user = FactoryGirl.create(:user_with_gcm_token)
+          FactoryGirl.create(:gcm_device_token, user: user)
+          notification = FactoryGirl.create(:notification, user: user)
+
+          notification.sendable(:android).device_tokens.should eq sendable_gcm(notification).device_tokens
+        end
+
+      end
+
+    end
+
   end
 
 end

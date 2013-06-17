@@ -42,6 +42,21 @@ class Notification
     end
   end
 
+  # Returns a sendable APNS or GCM Notification, ready to be consumed by
+  # a connection provided by PushMeUp
+  def sendable(type)
+    if type == :ios
+      user.apn_device_tokens.map{|apn_device_token|
+        APNS::Notification.new(apn_device_token.device_id, ios_version)
+      }
+    elsif type == :android
+      android_noti = android_version
+      unless android_noti.nil? || user.gcm_device_tokens.empty?
+        GCM::Notification.new(user.gcm_device_tokens.map(&:device_id),  android_noti.delete(:data), android_noti.delete(:options))
+      end
+    end
+  end
+
   private
     def fields_all_json
       [ios_specific_fields, android_specific_fields].each do |field|

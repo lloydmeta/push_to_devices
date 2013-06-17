@@ -52,12 +52,7 @@ class Service
         apn_connection: apn_connection,
         gcm_connection: gcm_connection
       )
-      begin
-        notifications_buffered_sender.send!
-      rescue => e
-        Padrino::logger.info e
-        Padrino::logger.info e.backtrace
-      end
+      notifications_buffered_sender.send!
     end
   end
 
@@ -71,8 +66,9 @@ class Service
 
   def clear_users_notifications!
     batch_iterate_users_with_notifications(batch_size: 1000) do |users_batch|
-      notifications_generator = NotificationsGenerator.new(users: users_batch)
-      notifications_generator.clear_users_notifications!
+      users_batch.each do |user|
+        user.notifications.destroy_all
+      end
     end
   end
 

@@ -5,7 +5,7 @@
 # passed in will be looped over, sent, and then destroyed
 class NotificationsBufferedSender
 
-  NOTIFICATIONS_BUFFER_THRESHOLD = Padrino.env == :test ? 50 : 10000
+  NOTIFICATIONS_BUFFER_THRESHOLD = Padrino.env == :test ? 50 : 500
 
   attr_accessor :users, :apn_connection, :gcm_connection, :notifications_buffer
 
@@ -46,7 +46,7 @@ class NotificationsBufferedSender
       notifications_buffer.map do |notification|
         notification.destroy
       end
-      self.notifications_buffer = []
+      notifications_buffer.clear
     end
 
     def add_to_buffer!(notification)
@@ -57,30 +57,21 @@ class NotificationsBufferedSender
     end
 
     def send_notifications(type)
-      formatted_notifications = notifications_buffer.map {|notification|
-        formatted_notifications(notification, type)
-      }.flatten.compact
+      begin
+        formatted_notifications = notifications_buffer.map {|notification|
+          notification.sendable(type)
+        }.flatten.compact
 
-      if ! formatted_notifications.empty?
-        if type == :ios
-          apn_connection.send_notifications(formatted_notifications)
-        elsif type == :android
-          gcm_connection.send_notifications(formatted_notifications)
+        if ! formatted_notifications.empty?
+          if type == :ios
+            apn_connection.send_notifications(formatted_notifications)
+          elsif type == :android
+            gcm_connection.send_notifications(formatted_notifications)
+          end
         end
-      end
-    end
-
-    def formatted_notifications(notification, type)
-      user = notification.user
-      if type == :ios
-        user.apn_device_tokens.map{|apn_device_token|
-          APNS::Notification.new(apn_device_token.device_id, notification.ios_version)
-        }
-      elsif type == :android
-        android_noti = notification.android_version
-        unless android_noti.nil? || user.gcm_device_tokens.empty?
-          GCM::Notification.new(user.gcm_device_tokens.map(&:device_id),  android_noti.delete(:data), android_noti.delete(:options))
-        end
+      rescue => e
+        Padrino::logger.info e
+        Padrino::logger.info e.backtrace
       end
     end
 

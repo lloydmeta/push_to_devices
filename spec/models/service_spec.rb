@@ -38,9 +38,27 @@ describe "Service Model" do
 
   describe "#clear_users_notifications!" do
 
+    before(:each) do
+      10.times do
+        FactoryGirl.create(:user, :service => service)
+      end
+
+      service.users.each do |user|
+        FactoryGirl.create(:notification, :user => user)
+      end
+    end
+
+    def service_user_notifications
+      service.reload
+      service.users.reduce(0) do |memo, user|
+        memo + user.notifications.size
+      end
+    end
+
     it "should call #clear_users_notifications! " do
-      NotificationsGenerator.any_instance.should_receive(:clear_users_notifications!)
+      service_user_notifications.should be > 0
       service.clear_users_notifications!
+      service_user_notifications.should be 0
     end
 
   end
