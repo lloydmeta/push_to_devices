@@ -50,10 +50,14 @@ class Notification
         APNS::Notification.new(apn_device_token.device_id, ios_version)
       }
     elsif type == :android
-      android_noti = android_version
-      unless android_noti.nil? || user.gcm_device_tokens.empty?
-        GCM::Notification.new(user.gcm_device_tokens.map(&:device_id),  android_noti.delete(:data), android_noti.delete(:options))
-      end
+      sendable_android
+    end
+  end
+
+  def sendable_android
+    android_noti = android_version
+    unless android_noti.empty? || user.gcm_device_tokens.empty?
+      GCM::Notification.new(user.gcm_device_tokens.map(&:device_id),  android_noti.delete(:data), android_noti.delete(:options))
     end
   end
 
