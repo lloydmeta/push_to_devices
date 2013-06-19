@@ -34,6 +34,12 @@ describe "Service Model" do
       service.send_notifications_to_users
     end
 
+    it "should call :update with (currently_sending: true) and (currently_sending: false)" do
+      Service.any_instance.should_receive(:update).with(currently_sending: true)
+      Service.any_instance.should_receive(:update).with(currently_sending: false)
+      service.send_notifications_to_users
+    end
+
   end
 
   describe "#clear_users_notifications!" do
