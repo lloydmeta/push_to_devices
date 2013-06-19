@@ -35,8 +35,8 @@ describe "Service Model" do
     end
 
     it "should call :update with (currently_sending: true) and (currently_sending: false)" do
-      Service.any_instance.should_receive(:update).with(currently_sending: true)
-      Service.any_instance.should_receive(:update).with(currently_sending: false)
+      service.should_receive(:update).with(currently_sending: true).ordered
+      service.should_receive(:update).with(currently_sending: false).ordered
       service.send_notifications_to_users
     end
 
