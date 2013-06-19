@@ -12,6 +12,7 @@ class Service
   field :name, :type => String # name of the service registerd to this push server
   field :description, :type => String
   field :interval, :type => Integer, default: 5 #interval at which to run notifications
+  field :currently_sending, :type => Boolean, default: false
   field :apn_host, :type => String
   field :apn_port, :type => Integer
   field :apn_pem_password, :type => String
@@ -46,13 +47,18 @@ class Service
   end
 
   def send_notifications_to_users
-    batch_iterate_users_with_notifications(batch_size: 1000) do |users_batch|
-      notifications_buffered_sender = NotificationsBufferedSender.new(
-        users: users_batch,
-        apn_connection: apn_connection,
-        gcm_connection: gcm_connection
-      )
-      notifications_buffered_sender.send!
+    begin
+      update(currently_sending: true)
+      batch_iterate_users_with_notifications(batch_size: 1000) do |users_batch|
+        notifications_buffered_sender = NotificationsBufferedSender.new(
+          users: users_batch,
+          apn_connection: apn_connection,
+          gcm_connection: gcm_connection
+        )
+        notifications_buffered_sender.send!
+      end
+    ensure
+      update(currently_sending: false)
     end
   end
 

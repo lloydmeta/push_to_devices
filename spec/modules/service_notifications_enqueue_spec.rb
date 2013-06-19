@@ -18,6 +18,16 @@ describe "Service Notifications Enqueue module" do
         ServiceNotificationsEnqueue.perform(5)
       end
 
+      it "should not cause services already currently_sending to receive send_notifications_to_users" do
+        Service.create!(
+          :name => "5 min 1",
+          :interval => 5,
+          :gcm_api_key => "123",
+          :currently_sending => true)
+        Service.any_instance.should_not_receive(:send_notifications_to_users)
+        ServiceNotificationsEnqueue.perform(5)
+      end
+
     end
 
   end
