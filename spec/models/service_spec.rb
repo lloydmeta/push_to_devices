@@ -132,11 +132,31 @@ describe "Service Model" do
 
     it "should iterate over the default 1000 users at a time" do
       2000.times do
-        FactoryGirl.create(:user, :service => service).notifications.create(ios_specific_fields: {random_hash_key: "ios random value"}. to_json, android_specific_fields:  {random_hash_key: "android random value"}.to_json)
+        user = FactoryGirl.create(:user, :service => service)
+        FactoryGirl.create(:notification, user: user)
       end
 
       service.batch_iterate_users_with_notifications do |batch|
         batch.all.to_a.size.should satisfy{|batch_size| [1000, 0].include? batch_size}
+      end
+    end
+
+    it "should pass users only once across all batches " do
+      mocker = double(:le_mock, :blah => true)
+      2010.times do
+        user = FactoryGirl.create(:user, :service => service)
+        FactoryGirl.create(:notification, user: user)
+        FactoryGirl.create(:notification, user: user)
+        FactoryGirl.create(:notification, user: user)
+      end
+      users_so_far = []
+      mocker.should_receive(:blah).exactly(2010).times
+      service.batch_iterate_users_with_notifications do |batch|
+        batch.each do |user|
+          mocker.blah
+          users_so_far.should_not include(user)
+          users_so_far << user
+        end
       end
     end
 
