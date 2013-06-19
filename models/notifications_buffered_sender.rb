@@ -43,7 +43,7 @@ class NotificationsBufferedSender
     end
 
     def destroy_notifications_in_buffer!
-      notifications_buffer.map do |notification|
+      notifications_buffer.each do |notification|
         notification.destroy
       end
       notifications_buffer.clear
