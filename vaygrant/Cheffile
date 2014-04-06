@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+#^syntax detection
+
+site 'http://community.opscode.com/api/v1'
+
+cookbook 'apt'
+
+cookbook 'chef-locale',
+  :git => "git@github.com:BCS-io/chef-locale.git"
+
+cookbook 'mongodb'
+
+cookbook 'rvm'
+
+cookbook 'redisio'

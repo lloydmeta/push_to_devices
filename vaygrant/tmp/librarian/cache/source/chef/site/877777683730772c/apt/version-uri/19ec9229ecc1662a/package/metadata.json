@@ -1,0 +1,51 @@
+{
+  "license": "Apache 2.0",
+  "recipes": {
+    "apt::proxy": "Set up an APT proxy",
+    "apt": "",
+    "apt::cacher": "Set up an APT cache"
+  },
+  "conflicting": {
+
+  },
+  "dependencies": {
+
+  },
+  "providing": {
+    "apt::proxy": [
+
+    ],
+    "apt": [
+
+    ],
+    "apt::cacher": [
+
+    ]
+  },
+  "long_description": "",
+  "description": "Configures apt and apt services",
+  "replacing": {
+
+  },
+  "platforms": {
+    "debian": [
+
+    ],
+    "ubuntu": [
+
+    ]
+  },
+  "version": "0.8.0",
+  "maintainer": "Opscode, Inc.",
+  "recommendations": {
+
+  },
+  "name": "apt",
+  "maintainer_email": "cookbooks@opscode.com",
+  "attributes": {
+
+  },
+  "suggestions": {
+
+  }
+}
